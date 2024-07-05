@@ -11,8 +11,7 @@
     "lint": "eslint",
     "lint:fix": "pnpm eslint . --fix",
     "build:clean": "rm -rf ./dist",
-    "build": "tsc && vite build",
-    "index": "node --loader ts-node/esm src/index.ts"
+    "build": "tsc && vite build"
   },
   "keywords": [],
   "author": "",
