@@ -1,0 +1,29 @@
+.navbar-container {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  max-width: 100%;
+  height: 60px;
+  color: red;
+  border-bottom: 1px solid rgba(0, 27, 55, 0.1);
+}
+
+.navbar-content-container {
+  display: flex;
+  align-items: center;
+  max-width: calc(100% - 48px);
+  height: 100%;
+  margin: auto;
+}
+
+.logo {
+  width: 20px;
+  height: 20px;
+  margin: 0 2px;
+}
+
+.title-img {
+  width: 85px;
+  height: 15px;
+  margin-bottom: -2px;
+}
