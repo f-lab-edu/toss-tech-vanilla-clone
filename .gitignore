@@ -1,0 +1,21 @@
+# Node.js 관련 무시 파일
+node_modules/
+npm-debug.log
+
+# OS별 무시 파일
+.DS_Store
+Thumbs.db
+
+# 특정 IDE 및 편집기 관련 무시 파일
+.vscode/
+.idea/
+
+# 로그 파일
+*.log
+
+# 환경 설정 파일
+.env
+
+# 빌드 디렉토리
+dist/
+build/
