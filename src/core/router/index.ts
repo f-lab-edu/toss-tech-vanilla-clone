@@ -125,7 +125,7 @@ export function createRouter({
   }
 
   // back, forward를 위한 root popstate eventListener 추가
-  window.addEventListener('popstate', (e) => {
+  window.addEventListener('popstate', () => {
     const path = document.location.pathname;
     render(path);
   });
