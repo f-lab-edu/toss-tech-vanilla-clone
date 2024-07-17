@@ -71,7 +71,6 @@ export function createRouter({
    * @name back
    */
   function back() {
-    console.log('hihihihih');
     history.back();
   }
 
@@ -126,23 +125,9 @@ export function createRouter({
   }
 
   // back, forward를 위한 root popstate eventListener 추가
-  // window.addEventListener('popstate', (e) => {
-  //   console.log('ihi@@@@@@@@@@@@@hihi');
-  //   if (e.state) {
-  //     console.log('e.state: ', e.state.path);
-  //     console.log('path!!!!!!: ', document.location.pathname);
-  //     const path = document.location.pathname;
-  //     render(path);
-  //   }
-  // });
-  window.addEventListener('popstate', function (event) {
-    console.log('popstate event fired!');
-    console.log(
-      'location: ' +
-        document.location +
-        ', state: ' +
-        JSON.stringify(event.state),
-    );
+  window.addEventListener('popstate', (e) => {
+    const path = document.location.pathname;
+    render(path);
   });
 
   // 초기 페이지 로드
