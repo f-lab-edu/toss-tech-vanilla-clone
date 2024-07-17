@@ -1,6 +1,6 @@
-interface IEvent {
-  type: string;
-  listener: (e: Event) => void;
-}
+// interface Event {
+//   type: keyof HTMLElementTagNameMap;
+//   listener: (e: Event) => void;
+// }
 
-export { IEvent };
+// export { Event };

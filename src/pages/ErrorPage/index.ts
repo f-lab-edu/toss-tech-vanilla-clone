@@ -1,5 +1,5 @@
 import { createComponent } from '../../core/createComponent';
-import { router } from '../../core/router';
+import { router } from '../../init';
 function ErrorPage(): HTMLElement {
   // h2 요소 생성
   const heading = createComponent({
@@ -18,7 +18,7 @@ function ErrorPage(): HTMLElement {
     type: 'button',
     textContent: '홈으로 가기',
     event: {
-      type: 'click',
+      type: 'click' as keyof HTMLElementTagNameMap,
       listener: () => {
         router.push('/');
       },

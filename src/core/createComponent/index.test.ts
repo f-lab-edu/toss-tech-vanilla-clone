@@ -1,14 +1,14 @@
 import '@testing-library/jest-dom';
 import { screen, fireEvent } from '@testing-library/dom';
-import { createComponent } from './createComponent';
-import { ICreateComponentProps } from '../types/core';
+import { createComponent } from '.';
+import { CreateComponentProps } from './types/createComponent';
 
 describe('createComponent', () => {
   beforeEach(() => {
     document.body.innerHTML = '';
   });
   it('생성된 요소에 올바른 태그와 텍스트가 설정된다.', () => {
-    const props: ICreateComponentProps = {
+    const props: CreateComponentProps = {
       type: 'button',
       textContent: 'Click Me',
     };
@@ -21,7 +21,7 @@ describe('createComponent', () => {
   });
 
   it('생성된 요소에 올바른 속성이 설정된다.', () => {
-    const props: ICreateComponentProps = {
+    const props: CreateComponentProps = {
       type: 'input',
       attributes: {
         type: 'text',
@@ -37,7 +37,7 @@ describe('createComponent', () => {
   });
 
   it('생성된 요소에 올바른 클래스명이 설정된다.', () => {
-    const props: ICreateComponentProps = {
+    const props: CreateComponentProps = {
       type: 'div',
       classnames: ['class1', 'class2'],
     };
@@ -56,7 +56,7 @@ describe('createComponent', () => {
     const child2 = document.createElement('span');
     child2.textContent = 'Child 2';
 
-    const props: ICreateComponentProps = {
+    const props: CreateComponentProps = {
       type: 'div',
       children: [child1, child2],
     };
@@ -72,11 +72,11 @@ describe('createComponent', () => {
 
   it('생성된 요소에 이벤트가 올바르게 바인딩된다.', () => {
     const handleClick = jest.fn();
-    const props: ICreateComponentProps = {
+    const props: CreateComponentProps = {
       type: 'button',
       textContent: 'Click Me',
       event: {
-        type: 'click',
+        type: 'click' as keyof HTMLElementTagNameMap,
         listener: handleClick,
       },
     };

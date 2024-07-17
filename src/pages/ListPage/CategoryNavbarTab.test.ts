@@ -13,14 +13,14 @@ describe('CategoryNavbarTab', () => {
     document.body.appendChild(tab);
   });
 
-  xit('주어진 파라미터 category와 path를 가진 a tag을 노출한다.', () => {
+  it('주어진 파라미터 category와 href값으로 path를 가진 a tag을 노출한다.', () => {
     expect(tab).toBeInTheDocument();
     expect(tab).toBeInstanceOf(HTMLElement);
     expect(tab).toHaveTextContent(CATEGORY);
-    expect(tab).toHaveAttribute('path', PATH);
+    expect(tab).toHaveAttribute('href', PATH);
   });
 
-  xit('클릭 시 올바른 경로로 이동한다', () => {
+  it('클릭 시 올바른 경로로 이동한다', () => {
     const category = 'Test Category';
     const path = '/test-path';
     const tab = CategoryNavbarTab({ category, path });

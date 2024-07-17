@@ -1,11 +1,11 @@
 import { createComponent } from '../../core/createComponent';
 import CategoryNavbar from './CategoryNavbar';
 
-interface IProps {
+interface Props {
   path: string;
 }
 
-function ListPage({ path }: IProps): HTMLElement {
+function ListPage({ path }: Props): HTMLElement {
   console.log('path:', path);
   // 히어로 이미지 생성
   const heroImg = createComponent({

@@ -1,5 +1,4 @@
-import { IEvent } from '../types/index';
-import { ICreateComponentProps } from '../types/core';
+import { BindingEvent, CreateComponentProps } from './types/createComponent';
 
 /**
  * 요소에 속성을 설정합니다.
@@ -42,9 +41,9 @@ function appendChildren(element: HTMLElement, children?: HTMLElement[]) {
 /**
  * 요소에 이벤트를 바인딩합니다.
  * @param {HTMLElement} element - 이벤트를 바인딩할 요소
- * @param {IBindEvent} [bindEvent] - 바인딩할 이벤트 객체
+ * @param {BindingEvent} [event] - 바인딩할 이벤트 객체
  */
-function bindEvent(element: HTMLElement, event?: IEvent) {
+function bindEvent(element: HTMLElement, event?: BindingEvent) {
   if (event) {
     const { type, listener } = event;
     element.addEventListener(type, listener);
@@ -59,7 +58,7 @@ function bindEvent(element: HTMLElement, event?: IEvent) {
  * @param {Object.<string, string>} [props.attributes] - 요소의 속성들
  * @param {string[]} [props.classnames] - 요소의 클래스명들
  * @param {HTMLElement[]} [props.children] - 요소의 자식 요소들
- * @param {IBindEvent} [props.bindEvent] - 요소에 바인딩할 이벤트
+ * @param {BindingEvent} [props.event] - 요소에 바인딩할 이벤트
  * @returns {HTMLElement} 생성된 HTML 요소
  */
 function createComponent({
@@ -69,7 +68,7 @@ function createComponent({
   classnames,
   children,
   event,
-}: ICreateComponentProps): HTMLElement {
+}: CreateComponentProps): HTMLElement {
   const component = document.createElement(type);
 
   if (textContent) component.textContent = textContent;

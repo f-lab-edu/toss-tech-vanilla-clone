@@ -1,7 +1,6 @@
 import { createComponent } from '../../core/createComponent';
-import { Link } from '../../core/router';
 
-interface ICategoryNavbarTabProps {
+interface CategoryNavbarTabProps {
   category: string;
   path: string;
 }
@@ -9,15 +8,17 @@ interface ICategoryNavbarTabProps {
 function CategoryNavbarTab({
   category,
   path,
-}: ICategoryNavbarTabProps): HTMLElement {
+}: CategoryNavbarTabProps): HTMLElement {
   const span = createComponent({
     type: 'span',
     textContent: category,
   });
-
-  const tab = Link({
-    to: path,
+  const tab = createComponent({
+    type: 'a',
     classnames: ['tab'],
+    attributes: {
+      href: path,
+    },
     children: [span],
   });
 

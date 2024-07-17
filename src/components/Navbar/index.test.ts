@@ -1,9 +1,8 @@
 import '@testing-library/jest-dom';
-import { screen, fireEvent } from '@testing-library/dom';
+import { screen } from '@testing-library/dom';
 import Navbar from './index';
-import { router } from '../../core/router';
 
-jest.mock('../../core/router', () => ({
+jest.mock('../../init', () => ({
   router: {
     push: jest.fn(),
   },
@@ -38,15 +37,5 @@ describe('Navbar', () => {
     expect(titleImg).toBeInTheDocument();
     expect(titleImg).toHaveClass('title-img');
     expect(titleImg).toHaveAttribute('src', './src/assets/images/title.png');
-  });
-
-  it('로고나 toss tech 이미지 클릭 시, 홈으로 이동 한다.', () => {
-    const link = screen.getByRole('link', {
-      name: /토스 기술 블로그 클론, 토스 테크 클론/i,
-    });
-
-    fireEvent.click(link);
-    expect(router.push).toHaveBeenCalledTimes(1);
-    expect(router.push).toHaveBeenCalledWith('/');
   });
 });

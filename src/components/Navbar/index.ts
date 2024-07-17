@@ -1,4 +1,3 @@
-import { router } from '../../core/router';
 import { createComponent } from '../../core/createComponent';
 
 function Navbar(): HTMLElement {
@@ -37,13 +36,6 @@ function Navbar(): HTMLElement {
       'aria-label': '토스 기술 블로그 클론, 토스 테크 클론',
     },
     children: [navbarContent],
-    event: {
-      type: 'click',
-      listener: (e: Event) => {
-        e.preventDefault();
-        router.push('/');
-      },
-    },
   });
 
   // 네비게이션 바 컨테이너 생성

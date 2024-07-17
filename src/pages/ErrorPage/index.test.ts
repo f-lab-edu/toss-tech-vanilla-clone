@@ -1,9 +1,9 @@
 import '@testing-library/jest-dom';
 import { screen, fireEvent } from '@testing-library/dom';
 import ErrorPage from './index';
-import { router } from '../../core/router';
+import { router } from '../../init';
 
-jest.mock('../../core/router', () => ({
+jest.mock('../../init', () => ({
   router: {
     push: jest.fn(),
   },
