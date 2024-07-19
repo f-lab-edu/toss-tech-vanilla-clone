@@ -31,10 +31,12 @@ export function createRouter({
    */
   function render(path: string) {
     const newPage = routeMap[path] || errorPage;
-    const $page = document.querySelector('.page');
-    if ($page) {
-      root.removeChild($page);
+
+    // 기존 모든 자식 요소 제거
+    while (root.firstChild) {
+      root.removeChild(root.firstChild);
     }
+
     bindEventListener(newPage);
     root.appendChild(newPage);
   }
