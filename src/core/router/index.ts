@@ -46,7 +46,7 @@ export function createRouter({
    * @param {string} path - 이동할 경로
    */
   function push(path: string) {
-    history.pushState({ path }, '', path);
+    history.pushState({}, '', path);
     render(path);
   }
 
