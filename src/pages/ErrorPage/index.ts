@@ -1,5 +1,7 @@
 import { createComponent } from '../../core/createComponent';
 import { router } from '../../init';
+import Page from '../../components/Page';
+
 function ErrorPage(): HTMLElement {
   // h2 요소 생성
   const heading = createComponent({
@@ -25,11 +27,16 @@ function ErrorPage(): HTMLElement {
     },
   });
 
-  const errorPage = createComponent({
-    type: 'div',
-    classnames: ['page', 'error-page'],
+  const errorPage = Page({
+    classnames: ['error-page'],
     children: [heading, message, button],
   });
+
+  // const errorPage = createComponent({
+  //   type: 'div',
+  //   classnames: ['page', 'error-page'],
+  //   children: [heading, message, button],
+  // });
 
   return errorPage;
 }

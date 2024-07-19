@@ -1,5 +1,4 @@
 import { createComponent } from './core/createComponent/index.ts';
-import Navbar from './components/Navbar/index.ts';
 import { init } from './init.ts';
 
 /**
@@ -9,7 +8,6 @@ import { init } from './init.ts';
  */
 function App(): HTMLElement {
   const app = createComponent({ type: 'div' });
-  app.appendChild(Navbar());
   init(app);
   return app;
 }

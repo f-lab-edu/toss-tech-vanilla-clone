@@ -2,7 +2,7 @@ import '@testing-library/jest-dom';
 import { screen } from '@testing-library/dom';
 import Navbar from './index';
 
-jest.mock('../../init', () => ({
+jest.mock('../../../init', () => ({
   router: {
     push: jest.fn(),
   },

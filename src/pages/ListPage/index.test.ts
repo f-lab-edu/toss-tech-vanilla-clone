@@ -18,8 +18,12 @@ describe('ListPage', () => {
     const heroImg = screen.getByAltText('toss tech hero image');
     expect(heroImg).toBeInTheDocument();
 
-    const categoryNavbarTabs = screen.getAllByRole('link');
-    expect(categoryNavbarTabs).toHaveLength(3);
+    const links = screen.getAllByRole('link');
+    expect(links).toHaveLength(4);
+
+    const categoryNavbarTabs = links.filter((link) =>
+      link.getAttribute('class')?.includes('tab'),
+    );
     categoryNavbarTabs.forEach((tab) => {
       expect(tab).toBeInTheDocument();
     });

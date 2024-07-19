@@ -1,4 +1,4 @@
-import { createComponent } from '../../core/createComponent';
+import { createComponent } from '../../../core/createComponent';
 
 function Navbar(): HTMLElement {
   // 로고 이미지 요소 생성

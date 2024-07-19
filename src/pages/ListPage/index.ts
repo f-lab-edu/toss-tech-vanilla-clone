@@ -1,4 +1,5 @@
 import { createComponent } from '../../core/createComponent';
+import Page from '../../components/Page';
 import CategoryNavbar from './CategoryNavbar';
 
 interface Props {
@@ -18,9 +19,8 @@ function ListPage({ path }: Props): HTMLElement {
   });
 
   // 메인 컨테이너 생성
-  const listPage = createComponent({
-    type: 'div',
-    classnames: ['page', 'list-page'],
+  const listPage = Page({
+    classnames: ['list-page'],
     children: [heroImg, CategoryNavbar()],
   });
 

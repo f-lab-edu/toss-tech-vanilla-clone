@@ -1,10 +1,3 @@
-.page {
-  margin-top: 60px; /* Adjust based on the height of your navbar */
-  height: calc(100% - 60px); /* Adjust based on the height of your navbar */
-  overflow-y: auto;
-  padding: 0 24px;
-}
-
 .hero-img {
   display: flex;
   justify-content: center;
