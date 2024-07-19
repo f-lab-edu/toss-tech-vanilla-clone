@@ -1,11 +1,11 @@
 import '@testing-library/jest-dom';
-import { screen, fireEvent } from '@testing-library/dom';
+import { screen, waitFor } from '@testing-library/dom';
 import { createRouter } from '.';
 import { Router } from './types/router';
 
 describe('createRouter', () => {
   let root: HTMLElement;
-  let routes;
+  let routes: { [key: string]: HTMLElement };
   let router: Router;
   let errorPage: HTMLElement;
 
@@ -44,29 +44,70 @@ describe('createRouter', () => {
     expect(screen.queryByText('홈 페이지')).not.toBeInTheDocument();
   });
 
-  xit('뒤로 및 앞으로 이동을 처리할 수 있어야 합니다', () => {
-    router.push('/about');
-    router.back();
-    expect(screen.getByText('홈 페이지')).toBeInTheDocument();
-    expect(screen.queryByText('어바웃 페이지')).not.toBeInTheDocument();
-    router.forward();
-    expect(screen.getByText('어바웃 페이지')).toBeInTheDocument();
-    expect(screen.queryByText('홈 페이지')).not.toBeInTheDocument();
-  });
-
-  it('알 수 없는 경로에 대해 404 페이지를 렌더링해야 합니다', () => {
-    router.push('/unknown');
+  it('존재하지 않는 경로로 이동할 때 에러 페이지를 표시합니다.', () => {
+    router.push('/nonexistent');
     expect(screen.getByText('페이지를 찾을 수 없습니다')).toBeInTheDocument();
   });
 
-  it('링크 클릭 이벤트를 바인딩하고 네비게이션을 처리할 수 있어야 합니다', () => {
-    const link = document.createElement('a');
-    link.href = '/about';
-    link.textContent = '어바웃 페이지로 이동';
-    root.appendChild(link);
+  it('브라우저 히스토리에서 뒤로 이동합니다.', async () => {
+    router.push('/about');
+    router.push('/');
 
-    fireEvent.click(screen.getByText('어바웃 페이지로 이동'));
+    router.back();
+
+    await waitFor(() => {
+      expect(screen.getByText('어바웃 페이지')).toBeInTheDocument();
+    });
+  });
+
+  it('브라우저 히스토리에서 앞으로 이동합니다.', async () => {
+    router.push('/about');
+    router.push('/');
+
+    router.back();
+    router.forward();
+
+    await waitFor(() => {
+      expect(screen.getByText('홈 페이지')).toBeInTheDocument();
+    });
+  });
+
+  it('브라우저 히스토리에서 주어진 만큼 이동합니다.', async () => {
+    router.push('/about');
+    router.push('/');
+
+    router.go(-1);
+
+    await waitFor(() => {
+      expect(screen.getByText('어바웃 페이지')).toBeInTheDocument();
+    });
+
+    router.go(1);
+
+    await waitFor(() => {
+      expect(screen.getByText('홈 페이지')).toBeInTheDocument();
+    });
+  });
+
+  it('페이지 내 링크 클릭 시 올바르게 경로를 이동합니다.', () => {
+    const link = document.createElement('a');
+    link.setAttribute('href', '/about');
+    link.textContent = 'About Link';
+    routes['/'].appendChild(link);
+
+    router.push('/');
+
+    link.click();
     expect(screen.getByText('어바웃 페이지')).toBeInTheDocument();
-    expect(screen.queryByText('홈 페이지')).not.toBeInTheDocument();
+  });
+
+  it('popstate 이벤트를 처리합니다.', () => {
+    router.push('/');
+    const popStateEvent = new PopStateEvent('popstate', {
+      state: {},
+    });
+    window.dispatchEvent(popStateEvent);
+
+    expect(screen.getByText('홈 페이지')).toBeInTheDocument();
   });
 });
