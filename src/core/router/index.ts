@@ -82,7 +82,9 @@ export function createRouter({
   }
 
   /**
-   * 모든 링크(a 태그들)에서 경로 속성을 찾아 이벤트 리스너를 추가합니다.
+   * 링크(a 태그들) 클릭 시 처리할 페이지 이동 이벤트를 page에 위임한다.
+   * 링크 내 요소가 클릭 되었을 때, a 태그로 인식되지 못하고 새로고침 된다.
+   * 따라서, 부모 요소에 link가 있는지 확인하고, a 태그의 href를 통해 path를 가져온다.
    * @param {HTMLElement} page - 이벤트 리스너를 추가할 페이지 엘리먼트
    */
   function bindEventListener(page: HTMLElement) {
@@ -90,6 +92,7 @@ export function createRouter({
       const target = e.target as HTMLElement;
       const link = target.closest('a');
       if (link) {
+        // 부모 요소에 link가 있는지 확인
         e.preventDefault();
         const path = link.getAttribute('href') || '/404';
         if (path !== window.location.pathname) {
@@ -104,8 +107,8 @@ export function createRouter({
     render(window.location.pathname);
   });
 
-  // 초기 페이지 로드
-  push(window.location.pathname);
+  // 초기 페이지 렌더링
+  render(window.location.pathname);
 
   return { push, replace, back, forward, go };
 }
