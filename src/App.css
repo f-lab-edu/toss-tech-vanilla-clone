@@ -1,0 +1,9 @@
+@import url('components/Page/index.css');
+@import url('components/Page/Navbar/index.css');
+@import url('pages/ListPage/index.css');
+@import url('pages/ListPage/CategoryNavbar.css');
+@import url('pages/ListPage/CategoryNavbarTab.css');
+
+body {
+  margin: 0;
+}

@@ -1,0 +1,9 @@
+.category-navbar {
+  display: flex;
+  border-bottom: 1px solid #f2f4f6;
+  border-bottom-color: #f2f4f6;
+  padding-bottom: 2px;
+  position: sticky;
+  top: 60px;
+  z-index: 9999;
+}
