@@ -1,4 +1,4 @@
-import { createComponent } from '../../core/createComponent';
+import { createComponent, createElement } from '../../core/createComponent';
 import Page from '../../components/Page';
 import CategoryNavbar from './CategoryNavbar';
 
@@ -6,25 +6,27 @@ interface Props {
   path: string;
 }
 
-function ListPage({ path }: Props): HTMLElement {
-  console.log('path:', path);
-  // 히어로 이미지 생성
-  const heroImg = createComponent({
-    type: 'img',
-    classnames: ['hero-img'],
-    attributes: {
-      alt: 'toss tech hero image',
-      src: '/src/assets/images/hero.webp',
+function ListPage({ path }: Props) {
+  console.log('ListPage path:', path);
+  const HeroImg = createComponent({
+    render: () => {
+      return createElement({
+        type: 'img',
+        classnames: ['hero-img'],
+        attributes: {
+          alt: 'toss tech hero image',
+          src: '/src/assets/images/hero.webp',
+        },
+      });
     },
   });
 
-  // 메인 컨테이너 생성
-  const listPage = Page({
+  const ListPage = Page({
     classnames: ['list-page'],
-    children: [heroImg, CategoryNavbar()],
+    children: [HeroImg, CategoryNavbar()],
   });
 
-  return listPage;
+  return ListPage;
 }
 
 export default ListPage;

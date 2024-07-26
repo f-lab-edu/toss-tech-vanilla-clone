@@ -8,9 +8,9 @@ import { Router } from './types/router';
  * @property {HTMLElement} errorPage - 에러 페이지 엘리먼트
  */
 interface CreateRouterProps {
-  routes: { [key: string]: HTMLElement };
+  routes: { [key: string]: () => HTMLElement };
   root: HTMLElement;
-  errorPage: HTMLElement;
+  errorPage: () => HTMLElement;
 }
 
 /**
@@ -23,22 +23,21 @@ export function createRouter({
   root,
   errorPage,
 }: CreateRouterProps): Router {
-  const routeMap: { [key: string]: HTMLElement } = routes;
+  const routeMap: { [key: string]: () => HTMLElement } = routes;
 
   /**
    * 주어진 경로에 따라 적절한 페이지 컴포넌트를 렌더링합니다.
    * @param {string} path - 렌더링할 경로
    */
   function render(path: string) {
-    const newPage = routeMap[path] || errorPage;
+    const constructor = routeMap[path] || errorPage;
+    const newPage = constructor();
 
     // 기존 모든 자식 요소 제거
-    while (root.firstChild) {
-      root.removeChild(root.firstChild);
+    if (root?.hasChildNodes()) {
+      root.innerHTML = '';
     }
-
-    bindEventListener(newPage);
-    root.appendChild(newPage);
+    root?.appendChild(newPage);
   }
 
   /**

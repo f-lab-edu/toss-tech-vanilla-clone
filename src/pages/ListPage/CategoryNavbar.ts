@@ -1,5 +1,5 @@
 import CategoryNavbarTab from './CategoryNavbarTab';
-import { createComponent } from '../../core/createComponent';
+import { createComponent, createElement } from '../../core/createComponent';
 
 const CATEGORIES = [
   { category: '전체', path: '/' },
@@ -7,19 +7,23 @@ const CATEGORIES = [
   { category: '디자인', path: '/design' },
 ];
 
-function CategoryNavbar(): HTMLElement {
+function CategoryNavbar() {
   /** Tabs */
-  const tabs = CATEGORIES.map(({ category, path }) =>
+  const Tabs = CATEGORIES.map(({ category, path }) =>
     CategoryNavbarTab({ category, path }),
   );
 
-  const navbar = createComponent({
-    type: 'div',
-    classnames: ['category-navbar'],
-    children: tabs,
+  const Navbar = createComponent({
+    render: () => {
+      return createElement({
+        type: 'div',
+        classnames: ['category-navbar'],
+        children: [...Tabs],
+      });
+    },
   });
 
-  return navbar;
+  return Navbar;
 }
 
 export default CategoryNavbar;

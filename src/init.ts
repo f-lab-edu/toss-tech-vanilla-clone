@@ -2,21 +2,21 @@ import { createRouter } from './core/router';
 import ListPage from './pages/ListPage';
 import ErrorPage from './pages/ErrorPage';
 import { Router } from './core/router/types/router';
+import { buildDOM } from './core/createComponent/index';
 
 export let router: Router;
 
-export function init(app: HTMLElement): Router {
+export function init(root: HTMLElement): Router {
   // 초기 라우터 설정
-  const routerObj = createRouter({
+  router = createRouter({
     routes: {
-      '/': ListPage({ path: '/' }),
-      '/tech': ListPage({ path: '/tech' }),
-      '/design': ListPage({ path: '/design' }),
+      '/': () => buildDOM(ListPage({ path: '/' })),
+      '/tech': () => buildDOM(ListPage({ path: '/tech' })),
+      '/design': () => buildDOM(ListPage({ path: '/design' })),
       // TODO: '/articles:articleId': detailPage(articleId)}
     },
-    root: app,
-    errorPage: ErrorPage(),
+    root,
+    errorPage: () => buildDOM(ErrorPage()),
   });
-  router = routerObj;
   return router;
 }
