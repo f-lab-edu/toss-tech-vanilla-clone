@@ -1,5 +1,5 @@
-import { createComponent, createElement } from '../../core/createComponent';
-import { router } from '../../init';
+import { createComponent, createElement } from '../../../core/createComponent';
+import { router } from '../../../init';
 
 interface CategoryNavbarTabProps {
   category: string;

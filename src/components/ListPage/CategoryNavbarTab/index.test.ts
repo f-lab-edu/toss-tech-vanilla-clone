@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 import { fireEvent } from '@testing-library/dom';
-import CategoryNavbarTab from './CategoryNavbarTab';
+import CategoryNavbarTab from './index';
 
 describe('CategoryNavbarTab', () => {
   const CATEGORY = '개발';

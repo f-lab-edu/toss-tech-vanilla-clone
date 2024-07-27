@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 import { screen } from '@testing-library/dom';
-import CategoryNavbar from './CategoryNavbar';
+import CategoryNavbar from './index';
 
 // CategoryNavbarTab 모듈을 목업합니다.
 jest.mock('./CategoryNavbarTab', () =>

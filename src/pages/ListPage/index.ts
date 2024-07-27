@@ -1,6 +1,6 @@
 import { createComponent, createElement } from '../../core/createComponent';
 import Page from '../../components/Page';
-import CategoryNavbar from './CategoryNavbar';
+import CategoryNavbar from '../../components/ListPage/CategoryNavbar';
 
 interface Props {
   path: string;

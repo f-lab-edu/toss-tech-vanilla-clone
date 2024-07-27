@@ -1,5 +1,5 @@
-import CategoryNavbarTab from './CategoryNavbarTab';
-import { createComponent, createElement } from '../../core/createComponent';
+import CategoryNavbarTab from '../CategoryNavbarTab';
+import { createComponent, createElement } from '../../../core/createComponent';
 
 const CATEGORIES = [
   { category: '전체', path: '/' },
