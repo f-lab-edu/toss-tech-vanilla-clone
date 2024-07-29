@@ -1,5 +1,4 @@
 import { createComponent, createElement } from '../../../core/createComponent';
-import { router } from '../../../init';
 
 interface CategoryNavbarTabProps {
   category: string;
@@ -10,6 +9,7 @@ function CategoryNavbarTab({ category, path }: CategoryNavbarTabProps) {
   const Tab = createComponent({
     initialState: {
       active: window.location.pathname === path,
+      isHovered: false,
     },
     render: (state) => {
       return createElement({
@@ -17,13 +17,6 @@ function CategoryNavbarTab({ category, path }: CategoryNavbarTabProps) {
         classnames: state.active ? ['active', 'tab'] : ['tab'],
         attributes: {
           href: path,
-        },
-        event: {
-          type: 'click',
-          listener: (e: Event) => {
-            e.preventDefault();
-            router.push(path);
-          },
         },
         children: [`${category}`],
       });

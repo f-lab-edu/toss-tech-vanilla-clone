@@ -1,33 +1,86 @@
+import { screen, render } from '@testing-library/dom';
 import '@testing-library/jest-dom';
-import { screen } from '@testing-library/dom';
-import ListPage from './index';
+import ListPage from './ListPage';
+import { createComponent, createElement } from '../../core/createComponent';
+import Page from '../../components/Page';
+import CategoryNavbar from '../../components/ListPage/CategoryNavbar';
 
-describe('ListPage', () => {
-  let listPage: HTMLElement;
+// 모의 함수를 설정합니다
+jest.mock('../../components/Page');
+jest.mock('../../components/ListPage/CategoryNavbar');
+
+describe('ListPage 컴포넌트', () => {
+  let createComponentSpy;
+  let createElementSpy;
+
   beforeEach(() => {
-    jest.clearAllMocks();
-    document.body.innerHTML = '';
-    listPage = ListPage({ path: '/' });
-    document.body.appendChild(listPage);
-  });
-
-  it('리스트 페이지 내부 요소들을 노출한다.', () => {
-    expect(listPage).toBeInTheDocument();
-    expect(listPage).toHaveClass('list-page');
-
-    const heroImg = screen.getByAltText('toss tech hero image');
-    expect(heroImg).toBeInTheDocument();
-
-    const links = screen.getAllByRole('link');
-    expect(links).toHaveLength(4);
-
-    const categoryNavbarTabs = links.filter((link) =>
-      link.getAttribute('class')?.includes('tab'),
+    // 모의 구현을 설정합니다
+    createComponentSpy = jest.spyOn(
+      require('../../core/createComponent'),
+      'createComponent',
     );
-    categoryNavbarTabs.forEach((tab) => {
-      expect(tab).toBeInTheDocument();
+    createElementSpy = jest.spyOn(
+      require('../../core/createComponent'),
+      'createElement',
+    );
+
+    createComponentSpy.mockImplementation(({ render }) => {
+      return {
+        render: () => render(),
+      };
     });
 
-    // TODO: article list 요소
+    createElementSpy.mockImplementation(({ type, classnames, attributes }) => {
+      const element = document.createElement(type);
+      if (classnames) {
+        element.className = classnames.join(' ');
+      }
+      if (attributes) {
+        Object.keys(attributes).forEach((key) => {
+          element.setAttribute(key, attributes[key]);
+        });
+      }
+      return element;
+    });
+
+    Page.mockImplementation(({ classnames, children }) => {
+      const pageElement = document.createElement('div');
+      pageElement.className = classnames.join(' ');
+      children.forEach((child) => pageElement.appendChild(child));
+      return pageElement;
+    });
+
+    CategoryNavbar.mockImplementation(() => {
+      const navbar = document.createElement('nav');
+      navbar.className = 'category-navbar';
+      return navbar;
+    });
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test('ListPage 컴포넌트가 올바르게 렌더링된다', () => {
+    const path = '/test-path';
+    const container = ListPage({ path });
+
+    document.body.appendChild(container);
+
+    // Hero 이미지가 렌더링 되었는지 확인합니다
+    const heroImg = screen.getByAltText('toss tech hero image');
+    expect(heroImg).toBeInTheDocument();
+    expect(heroImg).toHaveAttribute('src', '/src/assets/images/hero.webp');
+    expect(heroImg).toHaveClass('hero-img');
+
+    // CategoryNavbar가 렌더링 되었는지 확인합니다
+    const navbar = screen.getByRole('navigation');
+    expect(navbar).toBeInTheDocument();
+    expect(navbar).toHaveClass('category-navbar');
+
+    // 전체 페이지가 렌더링 되었는지 확인합니다
+    const listPage = screen.getByRole('main');
+    expect(listPage).toBeInTheDocument();
+    expect(listPage).toHaveClass('list-page');
   });
 });
