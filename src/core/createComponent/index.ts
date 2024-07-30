@@ -134,6 +134,11 @@ function render(component: VComponent, root: HTMLElement) {
   root.appendChild(dom);
 }
 
+/**
+ * 특정 DOM 요소를 루트 요소에서 제거합니다.
+ * @param {HTMLElement} dom - 제거할 DOM 요소
+ * @param {HTMLElement} root - 루트 요소
+ */
 function unMountDOM(dom: HTMLElement, root: HTMLElement) {
   root.removeChild(dom);
 }
