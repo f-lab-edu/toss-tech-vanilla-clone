@@ -1,12 +1,3 @@
-interface Page {
-  page: () => HTMLElement;
-  unMountPage: (component: ChildNode) => void;
-}
-
-interface Route {
-  [key: string]: Page;
-}
-
 /**
  * 라우터 생성에 필요한 속성을 정의합니다.
  * @interface CreateRouterProps
@@ -15,11 +6,10 @@ interface Route {
  * @property {() => HTMLElement} errorPage - 에러 페이지를 반환하는 함수
  */
 interface CreateRouterProps {
-  // routes: { [key: string]: Page };
-  routes: { [key: string]: () => HTMLElement };
+  routes: { [key: string]: () => void };
   root: HTMLElement;
-  errorPage: () => HTMLElement;
-  unMountPage: (dom: HTMLElement) => void;
+  errorPage: () => void;
+  unMountPage: (page: HTMLElement) => void;
 }
 
 interface LinkProps {

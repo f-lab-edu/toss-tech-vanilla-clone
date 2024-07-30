@@ -7,8 +7,10 @@ import {
   CreateComponentProps,
 } from './types/createComponent';
 
+/**
+ * appComponent는 render 함수를 통해 state이 반영된 Virtual DOM을 생성한다.
+ */
 let appComponent: VComponent;
-let component: VComponent;
 
 /**
  * 요소에 속성을 설정합니다.
@@ -80,9 +82,9 @@ function createComponent({
 }
 
 /**
- * VDOM 표현하는 object를 만들어낸다. React의 createElement와 유사합니다.
+ * VirtualDOM 표현하는 object를 만들어낸다. React의 createElement와 유사합니다.
  * @param {VElement} props - 요소의 속성들
- * @returns {VElement} 생성된 VDOM 요소
+ * @returns {VElement} 생성된 VirtualDOM 요소
  */
 function createElement({
   type,
@@ -95,8 +97,8 @@ function createElement({
 }
 
 /**
- * VDOM을 실제 DOM으로 변환합니다.
- * VComponent의 render함수를 통해 VDOM을 생성 후 DOM으로 변환한다.
+ * VirtualDOM을 실제 DOM으로 변환합니다.
+ * VComponent의 render함수를 통해 VirtualDOM을 생성 후 DOM으로 변환한다.
  * @param {Child} child - VComponent | string
  * @returns {HTMLElement} 변환된 DOM 요소
  */
@@ -122,57 +124,36 @@ function generateDOMFromVirtualDOM(child: Child): HTMLElement {
 }
 
 /**
- * VDOM을 순회하여 실제 DOM으로 변환하고, 특정 루트 요소에 삽입합니다.
+ * VirtualDOM을 순회하여 실제 DOM으로 변환하고, 특정 루트 요소에 삽입합니다.
  * @param {VComponent} component - 렌더링할 컴포넌트
  * @param {HTMLElement} root - 루트 요소
  */
-function render(app: VComponent, root: HTMLElement) {
-  appComponent = app;
-  const DOM = generateDOMFromVirtualDOM(appComponent);
-  root.appendChild(DOM);
-}
-
-/**
- * 주어진 컴포넌트를 기반으로 DOM을 빌드하고, 초기 렌더링을 수행합니다.
- * @param {VComponent} app - 빌드할 컴포넌트
- * @returns {HTMLElement | undefined} 생성된 DOM 요소, 루트 요소가 없으면 undefined
- */
-function mountDOM(component: VComponent): HTMLElement {
-  const root = document.getElementById('root');
-  if (root?.firstChild) {
-    root.innerHTML = '';
-  }
+function render(component: VComponent, root: HTMLElement) {
+  appComponent = component;
   const dom = generateDOMFromVirtualDOM(component);
-  root?.appendChild(dom);
-  return dom;
+  root.appendChild(dom);
 }
 
-function unMountDOM(dom: HTMLElement) {
-  const root = document.getElementById('root');
-  root?.removeChild(dom);
+function unMountDOM(dom: HTMLElement, root: HTMLElement) {
+  root.removeChild(dom);
 }
 
 /**
- * 현재 상태를 기반으로 컴포넌트를 다시 렌더링합니다. 그리고 새로 렌더링된 요소를 반환합니다.
+ * 현재 상태를 기반으로 컴포넌트를 다시 렌더링합니다.
  * @returns {HTMLElement} 새로 렌더링된 DOM 요소
  */
-function reRender(): HTMLElement {
+function reRender() {
   const root = document.getElementById('root');
-  if (root?.firstChild) {
-    root.innerHTML = '';
-  }
-  const newDOM = generateDOMFromVirtualDOM(appComponent);
-  root?.appendChild(newDOM);
-  return newDOM;
+  unMountDOM(root?.firstElementChild as HTMLElement, root as HTMLElement);
+  render(appComponent, root as HTMLElement);
 }
 
 export {
   createComponent,
   createElement,
-  reRender,
-  mountDOM,
-  unMountDOM,
   render,
+  reRender,
+  unMountDOM,
   setAttributes,
   setClassnames,
   bindEvent,

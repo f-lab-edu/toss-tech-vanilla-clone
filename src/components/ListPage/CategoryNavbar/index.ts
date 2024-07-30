@@ -8,7 +8,6 @@ const CATEGORIES = [
 ];
 
 function CategoryNavbar() {
-  /** Tabs */
   const Tabs = CATEGORIES.map(({ category, path }) =>
     CategoryNavbarTab({ category, path }),
   );

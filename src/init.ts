@@ -2,7 +2,7 @@ import { createRouter } from './core/router';
 import ListPage from './pages/ListPage';
 import ErrorPage from './pages/ErrorPage';
 import { Router } from './core/router/types/router';
-import { mountDOM, unMountDOM } from './core/createComponent/index';
+import { render, unMountDOM } from './core/createComponent/index';
 
 export let router: Router;
 
@@ -10,14 +10,14 @@ export function init(root: HTMLElement): Router {
   // 초기 라우터 설정
   router = createRouter({
     routes: {
-      '/': () => mountDOM(ListPage({ path: '/' })),
-      '/tech': () => mountDOM(ListPage({ path: '/tech' })),
-      '/design': () => mountDOM(ListPage({ path: '/design' })),
+      '/': () => render(ListPage({ path: '/' }), root),
+      '/tech': () => render(ListPage({ path: '/tech' }), root),
+      '/design': () => render(ListPage({ path: '/design' }), root),
       // TODO: '/articles:articleId': detailPage(articleId)}
     },
     root,
-    errorPage: () => mountDOM(ErrorPage()),
-    unMountPage: unMountDOM,
+    errorPage: () => render(ErrorPage(), root),
+    unMountPage: (page) => unMountDOM(page, root),
   });
   return router;
 }

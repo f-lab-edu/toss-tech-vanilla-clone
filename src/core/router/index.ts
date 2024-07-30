@@ -12,6 +12,7 @@ export function createRouter({
   errorPage,
   unMountPage,
 }: CreateRouterProps): Router {
+  // 패스에 따라 새로운 페이지를 렌더링 하는 함수를 저장한다.
   const routeMap = routes;
 
   /**
@@ -19,13 +20,13 @@ export function createRouter({
    * @param {string} path - 렌더링할 경로
    */
   function route(path: string) {
-    const page = routeMap[path] || errorPage;
-    const pageHTML = page();
-    // 기존 모든 자식 요소 제거
+    // 기존 자식 요소 제거
     if (root?.firstElementChild) {
       unMountPage(root?.firstElementChild as HTMLElement);
     }
-    root.appendChild(pageHTML);
+
+    const renderNewPage = routeMap[path] || errorPage;
+    renderNewPage();
     bindEventListener(root);
   }
 

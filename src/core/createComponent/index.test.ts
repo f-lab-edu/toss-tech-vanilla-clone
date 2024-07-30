@@ -3,9 +3,9 @@ import '@testing-library/jest-dom';
 import {
   createComponent,
   createElement,
-  reRender,
-  mountDOM,
   render,
+  reRender,
+  unMountDOM,
   setAttributes,
   setClassnames,
   bindEvent,
@@ -72,6 +72,58 @@ describe('createComponent 테스트', () => {
   });
 });
 
+describe('render 테스트', () => {
+  test('컴포넌트를 특정 DOM 요소에 마운트합니다.', () => {
+    const initialState: State = { count: 0 };
+    const renderFn = (state: State): VElement =>
+      createElement({
+        type: 'button',
+        attributes: { id: 'increment' },
+        children: [`Count: ${state.count}`],
+      });
+
+    const component: VComponent = createComponent({
+      initialState,
+      render: renderFn,
+    });
+
+    document.body.innerHTML = '<div id="root"></div>';
+    const root = document.getElementById('root') as HTMLElement;
+    render(component, root);
+
+    const button1 = document.getElementById('increment') as HTMLElement;
+    expect(button1).toBeInTheDocument();
+  });
+});
+
+describe('unMountDOM 테스트', () => {
+  test('DOM 요소를 제거합니다.', () => {
+    const initialState: State = { count: 0 };
+    const renderFn = (state: State): VElement =>
+      createElement({
+        type: 'button',
+        attributes: { id: 'increment' },
+        children: [`Count: ${state.count}`],
+      });
+
+    const component: VComponent = createComponent({
+      initialState,
+      render: renderFn,
+    });
+
+    document.body.innerHTML = '<div id="root"></div>';
+    const mountedDOM = generateDOMFromVirtualDOM(component);
+    const root = document.getElementById('root') as HTMLElement;
+    root.appendChild(mountedDOM);
+
+    expect(root.firstChild).toBe(mountedDOM);
+
+    unMountDOM(mountedDOM, root);
+
+    expect(root.firstChild).toBeNull();
+  });
+});
+
 describe('reRender 테스트', () => {
   test('상태 변경 후 컴포넌트를 다시 렌더링합니다.', () => {
     const initialState: State = { count: 0 };
@@ -107,29 +159,6 @@ describe('reRender 테스트', () => {
     expect(button1).not.toBe(button2);
     expect(button2).not.toBe(button3);
     expect(button3).toHaveTextContent('Count: 2');
-  });
-});
-
-describe('mountDOM 테스트', () => {
-  test('컴포넌트를 특정 DOM 요소에 마운트합니다.', () => {
-    const initialState: State = { count: 0 };
-    const renderFn = (state: State): VElement =>
-      createElement({
-        type: 'button',
-        attributes: { id: 'increment' },
-        children: [`Count: ${state.count}`],
-      });
-
-    const component: VComponent = createComponent({
-      initialState,
-      render: renderFn,
-    });
-
-    document.body.innerHTML = '<div id="root"></div>';
-    mountDOM(component);
-
-    const button1 = document.getElementById('increment') as HTMLElement;
-    expect(button1).toBeInTheDocument();
   });
 });
 
