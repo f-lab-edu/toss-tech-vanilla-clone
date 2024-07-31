@@ -1,20 +1,25 @@
-import App from './App';
-import { render as renderApp } from './index.ts'; // render 함수를 import 합니다.
+import { render } from './index'; // render 함수를 불러옵니다
+import { init } from './init';
 
-jest.mock('./App', () => ({
-  __esModule: true,
-  default: jest.fn(() => document.createElement('div')),
+// init 함수를 모킹합니다
+jest.mock('./init', () => ({
+  init: jest.fn(),
 }));
 
-describe('render', () => {
-  it('App 컴포넌트를 root 요소에 추가한다', () => {
+describe('render 함수', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    document.body.innerHTML = '';
+  });
+  it('ID가 "root"인 HTML 요소에 init 함수를 호출해야 합니다', () => {
+    // DOM에 #root 요소를 추가합니다.
     document.body.innerHTML = '<div id="root"></div>';
 
-    renderApp();
+    // render 함수를 호출합니다.
+    render();
 
-    const root = document.getElementById('root');
-
-    expect(root?.firstChild).toBeInstanceOf(HTMLElement);
-    expect(root?.firstChild).toStrictEqual(App());
+    // init 함수가 #root 요소와 함께 호출되었는지 확인합니다.
+    const $root = document.getElementById('root');
+    expect(init).toHaveBeenCalledWith($root);
   });
 });

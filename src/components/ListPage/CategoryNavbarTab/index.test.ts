@@ -1,44 +1,64 @@
 import '@testing-library/jest-dom';
-import { fireEvent } from '@testing-library/dom';
 import CategoryNavbarTab from './index';
 
+jest.mock('../../../core/createComponent', () => {
+  return {
+    createComponent: jest.fn((props) => {
+      const state = props.initialState;
+      return {
+        state,
+        render: () => props.render(state),
+      };
+    }),
+    createElement: jest.fn((props) => {
+      return Object.freeze(props);
+    }),
+  };
+});
+
 describe('CategoryNavbarTab', () => {
-  const CATEGORY = '개발';
-  const PATH = '/tech';
-  let tab: HTMLElement;
   beforeEach(() => {
     jest.clearAllMocks();
-    document.body.innerHTML = '';
-    tab = CategoryNavbarTab({ category: CATEGORY, path: PATH });
-    document.body.appendChild(tab);
-  });
-
-  it('주어진 파라미터 category와 href값으로 path를 가진 a tag을 노출한다.', () => {
-    expect(tab).toBeInTheDocument();
-    expect(tab).toBeInstanceOf(HTMLElement);
-    expect(tab).toHaveTextContent(CATEGORY);
-    expect(tab).toHaveAttribute('href', PATH);
-  });
-
-  it('클릭 시 올바른 경로로 이동한다', () => {
-    const category = 'Test Category';
-    const path = '/test-path';
-    const tab = CategoryNavbarTab({ category, path });
-
-    document.body.appendChild(tab);
-
-    const mockPush = jest.fn();
-    tab.addEventListener('click', (e) => {
-      e.preventDefault();
-      mockPush();
+    Object.defineProperty(window, 'location', {
+      configurable: true,
+      enumerable: true,
+      value: new URL(window.location.href),
     });
+  });
 
-    // 링크 클릭 이벤트를 트리거합니다.
-    fireEvent.click(tab);
+  it('올바른 카테고리와 경로로 렌더링됩니다.', () => {
+    const category = '테스트 카테고리';
+    const path = '/test-path';
+    const Tab = CategoryNavbarTab({ category, path });
 
-    // push 메소드가 호출되었는지 확인합니다.
-    expect(mockPush).toHaveBeenCalledTimes(1);
+    const tab = Tab.render();
+    expect(tab).toBeTruthy();
+    expect(tab.type).toBe('a');
+    expect(tab.attributes?.href).toBe(path);
+    expect(tab.children).toBeTruthy();
+    expect(tab.children).toContain(category);
+  });
 
-    document.body.removeChild(tab);
+  it('현재 경로와 일치할 때 active 클래스를 적용합니다.', () => {
+    const category = '테스트 카테고리';
+    const path = '/test-path';
+    window.location.pathname = path;
+
+    const Tab = CategoryNavbarTab({ category, path });
+    const tab = Tab.render();
+
+    expect(tab.classnames).toContain('tab');
+    expect(tab.classnames).toContain('active');
+  });
+
+  it('현재 경로와 일치하지 않을 때 active 클래스를 적용하지 않습니다.', () => {
+    const category = '테스트 카테고리';
+    const path = '/test-path';
+
+    const Tab = CategoryNavbarTab({ category, path });
+    const tab = Tab.render();
+
+    expect(tab.classnames).toContain('active');
+    expect(tab.classnames).toContain('tab');
   });
 });

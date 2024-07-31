@@ -1,7 +1,7 @@
 import CategoryNavbarTab from '../CategoryNavbarTab';
 import { createComponent, createElement } from '../../../core/createComponent';
 
-const CATEGORIES = [
+export const CATEGORIES = [
   { category: '전체', path: '/' },
   { category: '개발', path: '/tech' },
   { category: '디자인', path: '/design' },

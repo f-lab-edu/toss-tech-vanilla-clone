@@ -1,46 +1,23 @@
 import '@testing-library/jest-dom';
-import { screen } from '@testing-library/dom';
-import CategoryNavbar from './index';
+import { render } from '../../../core/createComponent';
+import CategoryNavbar, { CATEGORIES } from './index';
 
-// CategoryNavbarTab 모듈을 목업합니다.
-jest.mock('./CategoryNavbarTab', () =>
-  jest.fn(({ category, path }) => {
-    const tab = document.createElement('a');
-    tab.setAttribute('href', path);
-    tab.textContent = category;
-    tab.classList.add('tab');
-    return tab;
-  }),
-);
+describe('CategoryNavbar 컴포넌트', () => {
+  test('카테고리 탭이 올바르게 렌더링되는지 확인합니다.', () => {
+    // DOM에 컴포넌트를 추가합니다.
+    document.body.innerHTML = '<div id=root></div>';
+    const root = document.getElementById('root') as HTMLElement;
+    render(CategoryNavbar(), root);
 
-describe('CategoryNavbar', () => {
-  const NAVBAR_MAP: { [key: string]: string } = {
-    전체: '/',
-    개발: '/tech',
-    디자인: '/design',
-  };
+    // 카테고리 네비게이션 바가 올바르게 렌더링되었는지 확인합니다.
+    const navbar = document.querySelector('.category-navbar');
+    expect(navbar).toBeInTheDocument();
 
-  let categoryNavbar: HTMLElement;
-
-  beforeEach(() => {
-    jest.clearAllMocks();
-    document.body.innerHTML = '';
-    categoryNavbar = CategoryNavbar();
-    document.body.appendChild(categoryNavbar);
-  });
-
-  it('전체, 개발, 디자인 탭을 노출 한다.', () => {
-    expect(categoryNavbar).toBeInTheDocument();
-    expect(categoryNavbar).toHaveClass('category-navbar');
-
-    const tabs = screen.getAllByRole('link');
-    expect(tabs).toHaveLength(3);
-
-    ['전체', '개발', '디자인'].forEach((tabText) => {
-      const tab = screen.getByText(tabText);
+    // 각 카테고리 탭이 올바르게 렌더링되었는지 확인합니다.
+    CATEGORIES.forEach(({ category, path }) => {
+      const tab = document.querySelector(`[href="${path}"]`);
       expect(tab).toBeInTheDocument();
-      expect(tab).toHaveClass('tab');
-      expect(tab).toHaveAttribute('href', NAVBAR_MAP[tabText]);
+      expect(tab?.textContent).toBe(category);
     });
   });
 });

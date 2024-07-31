@@ -1,77 +1,56 @@
 import '@testing-library/jest-dom';
-import { getByText } from '@testing-library/dom';
-import Page from './index';
+import {
+  createComponent,
+  createElement,
+  render,
+} from '../../core/createComponent';
+import Page from './index.ts';
 
-// createComponent 모듈을 목업합니다.
-jest.mock('../../core/createComponent', () => ({
-  createComponent: jest.fn(({ type, classnames, children }) => {
-    const element = document.createElement(type);
-    if (classnames) {
-      element.classList.add(...classnames);
-    }
-    if (children) {
-      children.forEach((child: HTMLElement) => element.appendChild(child));
-    }
-    return element;
-  }),
-}));
-
-// Navbar 모듈을 목업합니다.
-jest.mock('./Navbar', () =>
-  jest.fn(() => {
-    const navbar = document.createElement('div');
-    navbar.classList.add('navbar');
-    return navbar;
-  }),
-);
-
-describe('Page 컴포넌트', () => {
-  let pageElement: HTMLElement;
-  const sampleChildren = [
-    document.createElement('p'),
-    document.createElement('span'),
-  ];
-  sampleChildren[0].textContent = 'Sample paragraph';
-  sampleChildren[1].textContent = 'Sample span';
-  const sampleClassnames = ['custom-class'];
-
-  beforeEach(() => {
-    pageElement = Page({
-      classnames: sampleClassnames,
-      children: sampleChildren,
+describe('Page Component', () => {
+  it('주어진 클래스명과 자식 요소들로 Page 컴포넌트를 렌더링해야 합니다', () => {
+    // Navbar 컴포넌트를 모킹합니다
+    jest.mock('./Navbar/index.ts', () => {
+      return jest.fn(() => {
+        return createComponent({
+          render: () => {
+            return createElement({
+              type: 'nav',
+              classnames: ['navbar'],
+              children: ['Navbar Content'],
+            });
+          },
+        });
+      });
     });
-    document.body.appendChild(pageElement);
-  });
 
-  afterEach(() => {
-    document.body.innerHTML = '';
-  });
+    // 테스트할 props 준비
+    const props = {
+      classnames: ['custom-class'],
+      children: [
+        createComponent({
+          render: () => {
+            return createElement({
+              type: 'p',
+              children: ['Child Content'],
+            });
+          },
+        }),
+      ],
+    };
 
-  it('페이지 컨테이너를 생성한다', () => {
+    // DOM에 컴포넌트를 추가합니다.
+    document.body.innerHTML = '<div id=root></div>';
+    const root = document.getElementById('root') as HTMLElement;
+    render(Page(props), root);
+
+    // Assertions (검증)
+    const pageElement = root.querySelector('.page.custom-class');
     expect(pageElement).toBeInTheDocument();
-    expect(pageElement).toHaveClass('page');
-    expect(pageElement).toHaveClass('custom-class');
-  });
+    expect(pageElement).toContainElement(root.querySelector('.navbar'));
+    expect(pageElement).toContainElement(root.querySelector('p'));
+    expect(root.querySelector('p')).toHaveTextContent('Child Content');
 
-  it('Navbar를 포함한다', () => {
-    const navbar = pageElement.querySelector('.navbar');
-    expect(navbar).toBeInTheDocument();
-  });
-
-  it('내용 컨테이너를 포함한다', () => {
-    const contentContainer = pageElement.querySelector(
-      '.content-container',
-    ) as HTMLElement;
-    expect(contentContainer).toBeInTheDocument();
-  });
-
-  it('내용 컨테이너에 자식 요소들이 포함되어 있다', () => {
-    const contentContainer = pageElement.querySelector(
-      '.content-container',
-    ) as HTMLElement;
-    expect(contentContainer).toContainElement(sampleChildren[0]);
-    expect(contentContainer).toContainElement(sampleChildren[1]);
-    expect(getByText(contentContainer, 'Sample paragraph')).toBeInTheDocument();
-    expect(getByText(contentContainer, 'Sample span')).toBeInTheDocument();
+    // 클린업
+    root.remove();
   });
 });
