@@ -6,13 +6,14 @@ import { CreateRouterProps } from './types/router';
  * @param {CreateRouterProps} props - 라우터 생성에 필요한 속성
  * @returns {Router} - 라우터 인터페이스를 반환합니다.
  */
-export function createRouter({
+export function createRouter<T>({
   routes,
   root,
+  render,
   errorPage,
-  unMountPage,
-}: CreateRouterProps): Router {
-  // 패스에 따라 새로운 페이지를 렌더링 하는 함수를 저장한다.
+  onRouteChange,
+}: CreateRouterProps<T>): Router {
+  // 패스에 따라 새로운 컴퍼넌트를 렌더링 하는 함수를 저장한다.
   const routeMap = routes;
 
   /**
@@ -20,13 +21,9 @@ export function createRouter({
    * @param {string} path - 렌더링할 경로
    */
   function route(path: string) {
-    // 기존 자식 요소 제거
-    if (root?.firstElementChild) {
-      unMountPage(root?.firstElementChild as HTMLElement);
-    }
-
-    const renderNewPage = routeMap[path] || errorPage;
-    renderNewPage();
+    onRouteChange({ currentElement: root?.firstElementChild as HTMLElement });
+    const page: T = routeMap[path]() || errorPage();
+    render(page);
     bindEventListener(root);
   }
 
