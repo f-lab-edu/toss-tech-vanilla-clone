@@ -5,7 +5,7 @@ import {
   createElement,
   render,
   reRender,
-  unMountDOM,
+  unmount,
   setAttributes,
   setClassnames,
   bindEvent,
@@ -96,7 +96,7 @@ describe('render 테스트', () => {
   });
 });
 
-describe('unMountDOM 테스트', () => {
+describe('unmount 테스트', () => {
   test('DOM 요소를 제거합니다.', () => {
     const initialState: State = { count: 0 };
     const renderFn = (state: State): VElement =>
@@ -118,7 +118,7 @@ describe('unMountDOM 테스트', () => {
 
     expect(root.firstChild).toBe(mountedDOM);
 
-    unMountDOM(mountedDOM, root);
+    unmount(mountedDOM, root);
 
     expect(root.firstChild).toBeNull();
   });

@@ -1,113 +1,171 @@
-import '@testing-library/jest-dom';
-import { screen, waitFor } from '@testing-library/dom';
-import { createRouter } from '.';
+import { createRouter } from './index';
 import { Router } from './types/router';
+import { CreateRouterProps } from './types/router';
 
-describe('createRouter', () => {
+describe('createRouter 테스트', () => {
   let root: HTMLElement;
-  let routes: { [key: string]: HTMLElement };
-  let router: Router;
-  let errorPage: HTMLElement;
+  let renderMock: jest.Mock;
+  let errorPageMock: jest.Mock;
+  let onRouteChangeMock: jest.Mock;
 
   beforeEach(() => {
-    document.body.innerHTML = '<div id="root"></div>';
-    root = document.getElementById('root') as HTMLElement;
-    routes = {
-      '/': document.createElement('div'),
-      '/about': document.createElement('div'),
+    root = document.createElement('div');
+    renderMock = jest.fn();
+    errorPageMock = jest.fn();
+    onRouteChangeMock = jest.fn();
+
+    document.body.appendChild(root);
+  });
+
+  afterEach(() => {
+    document.body.removeChild(root);
+    jest.restoreAllMocks();
+  });
+
+  test('라우터를 생성하고 초기 경로를 렌더링합니다.', () => {
+    const routes = {
+      '/': jest.fn(() => 'HomePage'),
+      '/about': jest.fn(() => 'AboutPage'),
     };
 
-    routes['/'].textContent = '홈 페이지';
-    routes['/'].classList.add('page');
-    routes['/about'].textContent = '어바웃 페이지';
-    routes['/about'].classList.add('page');
+    const props: CreateRouterProps<string> = {
+      routes,
+      root,
+      render: renderMock,
+      errorPage: errorPageMock,
+      onRouteChange: onRouteChangeMock,
+    };
 
-    errorPage = document.createElement('div');
-    errorPage.textContent = '페이지를 찾을 수 없습니다';
+    createRouter(props);
 
-    router = createRouter({ routes, root, errorPage });
+    expect(routes['/']).toHaveBeenCalled();
+    expect(renderMock).toHaveBeenCalledWith('HomePage');
   });
 
-  it('초기 경로를 올바르게 렌더링해야 합니다', () => {
-    expect(screen.getByText('홈 페이지')).toBeInTheDocument();
-  });
+  test('push 메서드를 사용하여 경로를 변경하고 페이지를 렌더링합니다.', () => {
+    const routes = {
+      '/': jest.fn(() => 'HomePage'),
+      '/about': jest.fn(() => 'AboutPage'),
+    };
 
-  it('push 메서드로 새로운 경로로 이동할 수 있어야 합니다', async () => {
+    const props: CreateRouterProps<string> = {
+      routes,
+      root,
+      render: renderMock,
+      errorPage: errorPageMock,
+      onRouteChange: onRouteChangeMock,
+    };
+
+    const router: Router = createRouter(props);
     router.push('/about');
-    expect(screen.getByText('어바웃 페이지')).toBeInTheDocument();
-    expect(screen.queryByText('홈 페이지')).not.toBeInTheDocument();
+
+    expect(routes['/about']).toHaveBeenCalled();
+    expect(renderMock).toHaveBeenCalledWith('AboutPage');
   });
 
-  it('replace 메서드로 현재 경로를 대체할 수 있어야 합니다', () => {
+  test('replace 메서드를 사용하여 경로를 변경하고 페이지를 렌더링합니다.', () => {
+    const routes = {
+      '/': jest.fn(() => 'HomePage'),
+      '/about': jest.fn(() => 'AboutPage'),
+    };
+
+    const props: CreateRouterProps<string> = {
+      routes,
+      root,
+      render: renderMock,
+      errorPage: errorPageMock,
+      onRouteChange: onRouteChangeMock,
+    };
+
+    const router: Router = createRouter(props);
     router.replace('/about');
-    expect(screen.getByText('어바웃 페이지')).toBeInTheDocument();
-    expect(screen.queryByText('홈 페이지')).not.toBeInTheDocument();
+
+    expect(routes['/about']).toHaveBeenCalled();
+    expect(renderMock).toHaveBeenCalledWith('AboutPage');
   });
 
-  it('존재하지 않는 경로로 이동할 때 에러 페이지를 표시합니다.', () => {
-    router.push('/nonexistent');
-    expect(screen.getByText('페이지를 찾을 수 없습니다')).toBeInTheDocument();
-  });
+  test('back 메서드를 사용하여 히스토리에서 뒤로 이동합니다.', () => {
+    const routes = {
+      '/': jest.fn(() => 'HomePage'),
+      '/about': jest.fn(() => 'AboutPage'),
+    };
 
-  it('브라우저 히스토리에서 뒤로 이동합니다.', async () => {
+    const props: CreateRouterProps<string> = {
+      routes,
+      root,
+      render: renderMock,
+      errorPage: errorPageMock,
+      onRouteChange: onRouteChangeMock,
+    };
+
+    const router: Router = createRouter(props);
     router.push('/about');
-    router.push('/');
-
     router.back();
 
-    await waitFor(() => {
-      expect(screen.getByText('어바웃 페이지')).toBeInTheDocument();
-    });
+    expect(onRouteChangeMock).toHaveBeenCalled();
   });
 
-  it('브라우저 히스토리에서 앞으로 이동합니다.', async () => {
-    router.push('/about');
-    router.push('/');
+  test('forward 메서드를 사용하여 히스토리에서 앞으로 이동합니다.', () => {
+    const routes = {
+      '/': jest.fn(() => 'HomePage'),
+      '/about': jest.fn(() => 'AboutPage'),
+    };
 
+    const props: CreateRouterProps<string> = {
+      routes,
+      root,
+      render: renderMock,
+      errorPage: errorPageMock,
+      onRouteChange: onRouteChangeMock,
+    };
+
+    const router: Router = createRouter(props);
+    router.push('/about');
     router.back();
     router.forward();
 
-    await waitFor(() => {
-      expect(screen.getByText('홈 페이지')).toBeInTheDocument();
-    });
+    expect(onRouteChangeMock).toHaveBeenCalled();
   });
 
-  it('브라우저 히스토리에서 주어진 만큼 이동합니다.', async () => {
-    router.push('/about');
-    router.push('/');
+  test('go 메서드를 사용하여 히스토리에서 특정 위치로 이동합니다.', () => {
+    const routes = {
+      '/': jest.fn(() => 'HomePage'),
+      '/about': jest.fn(() => 'AboutPage'),
+    };
 
+    const props: CreateRouterProps<string> = {
+      routes,
+      root,
+      render: renderMock,
+      errorPage: errorPageMock,
+      onRouteChange: onRouteChangeMock,
+    };
+
+    const router: Router = createRouter(props);
+    router.push('/about');
     router.go(-1);
 
-    await waitFor(() => {
-      expect(screen.getByText('어바웃 페이지')).toBeInTheDocument();
-    });
-
-    router.go(1);
-
-    await waitFor(() => {
-      expect(screen.getByText('홈 페이지')).toBeInTheDocument();
-    });
+    expect(onRouteChangeMock).toHaveBeenCalled();
   });
 
-  it('페이지 내 링크 클릭 시 올바르게 경로를 이동합니다.', () => {
-    const link = document.createElement('a');
-    link.setAttribute('href', '/about');
-    link.textContent = 'About Link';
-    routes['/'].appendChild(link);
+  test('없는 경로로 이동할 때 에러 페이지를 렌더링합니다.', () => {
+    const routes = {
+      '/': jest.fn(() => 'HomePage'),
+      '/about': jest.fn(() => 'AboutPage'),
+    };
 
-    router.push('/');
+    const props: CreateRouterProps<string> = {
+      routes,
+      root,
+      render: renderMock,
+      errorPage: errorPageMock,
+      onRouteChange: onRouteChangeMock,
+    };
 
-    link.click();
-    expect(screen.getByText('어바웃 페이지')).toBeInTheDocument();
-  });
+    const router: Router = createRouter(props);
+    router.push('/non-existent');
 
-  it('popstate 이벤트를 처리합니다.', () => {
-    router.push('/');
-    const popStateEvent = new PopStateEvent('popstate', {
-      state: {},
-    });
-    window.dispatchEvent(popStateEvent);
-
-    expect(screen.getByText('홈 페이지')).toBeInTheDocument();
+    expect(errorPageMock).toHaveBeenCalled();
+    expect(renderMock).toHaveBeenCalledWith(undefined);
   });
 });

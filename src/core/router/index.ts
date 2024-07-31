@@ -22,7 +22,7 @@ export function createRouter<T>({
    */
   function route(path: string) {
     onRouteChange({ currentElement: root?.firstElementChild as HTMLElement });
-    const page: T = routeMap[path]() || errorPage();
+    const page: T = (routeMap[path] || errorPage)();
     render(page);
     bindEventListener(root);
   }
