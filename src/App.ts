@@ -1,5 +1,4 @@
 import { createComponent, createElement } from '../src/core/createComponent';
-import ListPage from './pages/ListPage';
 
 /**
  * 애플리케이션의 루트 컴포넌트를 생성.
