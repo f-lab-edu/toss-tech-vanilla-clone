@@ -19,40 +19,12 @@ import {
   VComponent,
 } from './types/createComponent';
 
-const initializeComponent = (
-  initialState: State,
-  renderFn: (state: State, setState?: SetState) => VElement,
-): VComponent => {
+const initialState: State = { count: 0 };
+
+const initializeComponent = (): VComponent => {
   return createComponent({
     initialState,
-    render: renderFn,
-  });
-};
-
-const setupDOM = () => {
-  document.body.innerHTML = '<div id="root"></div>';
-  return document.getElementById('root') as HTMLElement;
-};
-
-describe('createComponent 테스트', () => {
-  test('컴포넌트를 생성합니다.', () => {
-    const initialState: State = { count: 0 };
-    const renderFn = (state: State): VElement =>
-      createElement({
-        type: 'button',
-        attributes: { id: 'increment' },
-        children: [`Count: ${state.count}`],
-      });
-
-    const component: VComponent = initializeComponent(initialState, renderFn);
-
-    expect(component).toHaveProperty('state', initialState);
-    expect(component).toHaveProperty('render');
-  });
-
-  test('컴포넌트 상태를 업데이트시 새로운 불변객체 VirtualDOM을 생성하고 화면을 업데이트합니다.', () => {
-    const initialState: State = { count: 0 };
-    const renderFn = (state: State, setState?: SetState): VElement => {
+    render: (state: State, setState?: SetState): VElement => {
       const updateState = setState || (() => {});
       return createElement({
         type: 'button',
@@ -63,9 +35,25 @@ describe('createComponent 테스트', () => {
         },
         children: [`Count: ${state.count}`],
       });
-    };
+    },
+  });
+};
 
-    const component: VComponent = initializeComponent(initialState, renderFn);
+const setupDOM = () => {
+  document.body.innerHTML = '<div id="root"></div>';
+  return document.getElementById('root') as HTMLElement;
+};
+
+describe('createComponent 테스트', () => {
+  test('컴포넌트를 생성합니다.', () => {
+    const component: VComponent = initializeComponent();
+
+    expect(component).toHaveProperty('state', initialState);
+    expect(component).toHaveProperty('render');
+  });
+
+  test('컴포넌트 상태를 업데이트시 새로운 불변객체 VirtualDOM을 생성하고 화면을 업데이트합니다.', () => {
+    const component: VComponent = initializeComponent();
     const root = setupDOM();
     render(component, root);
 
@@ -82,15 +70,7 @@ describe('createComponent 테스트', () => {
 
 describe('render 테스트', () => {
   test('컴포넌트를 특정 DOM 요소에 마운트합니다.', () => {
-    const initialState: State = { count: 0 };
-    const renderFn = (state: State): VElement =>
-      createElement({
-        type: 'button',
-        attributes: { id: 'increment' },
-        children: [`Count: ${state.count}`],
-      });
-
-    const component: VComponent = initializeComponent(initialState, renderFn);
+    const component: VComponent = initializeComponent();
     const root = setupDOM();
     render(component, root);
 
@@ -101,15 +81,7 @@ describe('render 테스트', () => {
 
 describe('unmount 테스트', () => {
   test('DOM 요소를 제거합니다.', () => {
-    const initialState: State = { count: 0 };
-    const renderFn = (state: State): VElement =>
-      createElement({
-        type: 'button',
-        attributes: { id: 'increment' },
-        children: [`Count: ${state.count}`],
-      });
-
-    const component: VComponent = initializeComponent(initialState, renderFn);
+    const component: VComponent = initializeComponent();
     const root = setupDOM();
     const mountedDOM = generateDOMFromVirtualDOM(component);
     root.appendChild(mountedDOM);
@@ -124,21 +96,7 @@ describe('unmount 테스트', () => {
 
 describe('reRender 테스트', () => {
   test('상태 변경 후 컴포넌트를 다시 렌더링합니다.', () => {
-    const initialState: State = { count: 0 };
-    const renderFn = (state: State, setState?: SetState): VElement => {
-      const updateState = setState || (() => {});
-      return createElement({
-        type: 'button',
-        attributes: { id: 'increment' },
-        event: {
-          type: 'click',
-          listener: () => updateState({ count: state.count + 1 }),
-        },
-        children: [`Count: ${state.count}`],
-      });
-    };
-
-    const component: VComponent = initializeComponent(initialState, renderFn);
+    const component: VComponent = initializeComponent();
     const root = setupDOM();
     render(component, root);
 

@@ -17,7 +17,7 @@ describe('CategoryNavbar 컴포넌트', () => {
     CATEGORIES.forEach(({ category, path }) => {
       const tab = document.querySelector(`[href="${path}"]`);
       expect(tab).toBeInTheDocument();
-      expect(tab?.textContent).toBe(category);
+      expect(tab!.textContent).toBe(category);
     });
   });
 });

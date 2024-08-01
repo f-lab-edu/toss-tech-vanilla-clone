@@ -13,7 +13,7 @@ describe('Navbar 컴포넌트', () => {
     const navbarElement = root.querySelector('.navbar');
     expect(navbarElement).toBeInTheDocument();
 
-    const linkElement = navbarElement?.querySelector('a');
+    const linkElement = navbarElement!.querySelector('a');
     expect(linkElement).toBeInTheDocument();
     expect(linkElement).toHaveAttribute('href', '/');
     expect(linkElement).toHaveAttribute(
@@ -21,15 +21,15 @@ describe('Navbar 컴포넌트', () => {
       '토스 기술 블로그 클론, 토스 테크 클론',
     );
 
-    const navbarContentElement = linkElement?.querySelector('.navbar-content');
+    const navbarContentElement = linkElement!.querySelector('.navbar-content');
     expect(navbarContentElement).toBeInTheDocument();
 
-    const logoImg = navbarContentElement?.querySelector('.logo');
+    const logoImg = navbarContentElement!.querySelector('.logo');
     expect(logoImg).toBeInTheDocument();
     expect(logoImg).toHaveAttribute('src', './src/assets/images/logo.png');
     expect(logoImg).toHaveAttribute('alt', 'toss logo image');
 
-    const titleImg = navbarContentElement?.querySelector('.title-img');
+    const titleImg = navbarContentElement!.querySelector('.title-img');
     expect(titleImg).toBeInTheDocument();
     expect(titleImg).toHaveAttribute('src', './src/assets/images/title.png');
     expect(titleImg).toHaveAttribute('alt', 'toss tech title image');

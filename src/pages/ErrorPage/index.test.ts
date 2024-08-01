@@ -21,16 +21,16 @@ describe('ErrorPage 컴포넌트', () => {
     const errorPageElement = root.querySelector('.error-page');
     expect(errorPageElement).toBeInTheDocument();
 
-    const headingElement = errorPageElement?.querySelector('h2');
+    const headingElement = errorPageElement!.querySelector('h2');
     expect(headingElement).toBeInTheDocument();
     expect(headingElement).toHaveTextContent('앗, 페이지를 찾지 못했어요');
 
-    const buttonElement = errorPageElement?.querySelector('button');
+    const buttonElement = errorPageElement!.querySelector('button');
     expect(buttonElement).toBeInTheDocument();
     expect(buttonElement).toHaveTextContent('홈으로 가기');
 
     // 버튼 클릭 이벤트 시뮬레이션
-    buttonElement?.click();
+    buttonElement!.click();
     expect(router.push).toHaveBeenCalledWith('/');
 
     // 클린업
