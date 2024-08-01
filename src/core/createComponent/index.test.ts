@@ -19,6 +19,21 @@ import {
   VComponent,
 } from './types/createComponent';
 
+const initializeComponent = (
+  initialState: State,
+  renderFn: (state: State, setState?: SetState) => VElement,
+): VComponent => {
+  return createComponent({
+    initialState,
+    render: renderFn,
+  });
+};
+
+const setupDOM = () => {
+  document.body.innerHTML = '<div id="root"></div>';
+  return document.getElementById('root') as HTMLElement;
+};
+
 describe('createComponent 테스트', () => {
   test('컴포넌트를 생성합니다.', () => {
     const initialState: State = { count: 0 };
@@ -29,10 +44,7 @@ describe('createComponent 테스트', () => {
         children: [`Count: ${state.count}`],
       });
 
-    const component: VComponent = createComponent({
-      initialState,
-      render: renderFn,
-    });
+    const component: VComponent = initializeComponent(initialState, renderFn);
 
     expect(component).toHaveProperty('state', initialState);
     expect(component).toHaveProperty('render');
@@ -40,25 +52,21 @@ describe('createComponent 테스트', () => {
 
   test('컴포넌트 상태를 업데이트시 새로운 불변객체 VirtualDOM을 생성하고 화면을 업데이트합니다.', () => {
     const initialState: State = { count: 0 };
-    const renderFn = (state: State, setState: SetState): VElement =>
-      createElement({
+    const renderFn = (state: State, setState?: SetState): VElement => {
+      const updateState = setState || (() => {});
+      return createElement({
         type: 'button',
         attributes: { id: 'increment' },
         event: {
           type: 'click',
-          listener: () => setState({ count: state.count + 1 }),
+          listener: () => updateState({ count: state.count + 1 }),
         },
         children: [`Count: ${state.count}`],
       });
+    };
 
-    const component: VComponent = createComponent({
-      initialState,
-      render: renderFn,
-    });
-
-    document.body.innerHTML = '<div id="root"></div>';
-    const root = document.getElementById('root') as HTMLElement;
-    expect(root).toBeInTheDocument();
+    const component: VComponent = initializeComponent(initialState, renderFn);
+    const root = setupDOM();
     render(component, root);
 
     const button1 = document.getElementById('increment') as HTMLElement;
@@ -82,13 +90,8 @@ describe('render 테스트', () => {
         children: [`Count: ${state.count}`],
       });
 
-    const component: VComponent = createComponent({
-      initialState,
-      render: renderFn,
-    });
-
-    document.body.innerHTML = '<div id="root"></div>';
-    const root = document.getElementById('root') as HTMLElement;
+    const component: VComponent = initializeComponent(initialState, renderFn);
+    const root = setupDOM();
     render(component, root);
 
     const button1 = document.getElementById('increment') as HTMLElement;
@@ -106,14 +109,9 @@ describe('unmount 테스트', () => {
         children: [`Count: ${state.count}`],
       });
 
-    const component: VComponent = createComponent({
-      initialState,
-      render: renderFn,
-    });
-
-    document.body.innerHTML = '<div id="root"></div>';
+    const component: VComponent = initializeComponent(initialState, renderFn);
+    const root = setupDOM();
     const mountedDOM = generateDOMFromVirtualDOM(component);
-    const root = document.getElementById('root') as HTMLElement;
     root.appendChild(mountedDOM);
 
     expect(root.firstChild).toBe(mountedDOM);
@@ -127,24 +125,22 @@ describe('unmount 테스트', () => {
 describe('reRender 테스트', () => {
   test('상태 변경 후 컴포넌트를 다시 렌더링합니다.', () => {
     const initialState: State = { count: 0 };
-    const renderFn = (state: State, setState: SetState): VElement =>
-      createElement({
+    const renderFn = (state: State, setState?: SetState): VElement => {
+      const updateState = setState || (() => {});
+      return createElement({
         type: 'button',
         attributes: { id: 'increment' },
         event: {
           type: 'click',
-          listener: () => setState({ count: state.count + 1 }),
+          listener: () => updateState({ count: state.count + 1 }),
         },
         children: [`Count: ${state.count}`],
       });
+    };
 
-    const component: VComponent = createComponent({
-      initialState,
-      render: renderFn,
-    });
-
-    document.body.innerHTML = '<div id="root"></div>';
-    render(component, document.getElementById('root') as HTMLElement);
+    const component: VComponent = initializeComponent(initialState, renderFn);
+    const root = setupDOM();
+    render(component, root);
 
     const button1 = document.getElementById('increment') as HTMLElement;
     expect(button1).toHaveTextContent('Count: 0');

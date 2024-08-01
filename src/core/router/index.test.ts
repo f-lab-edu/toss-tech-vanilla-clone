@@ -7,12 +7,28 @@ describe('createRouter 테스트', () => {
   let renderMock: jest.Mock;
   let errorPageMock: jest.Mock;
   let onRouteChangeMock: jest.Mock;
+  let routes: { [key: string]: jest.Mock };
+
+  const initializeRouter = (): Router => {
+    const props: CreateRouterProps<string> = {
+      routes,
+      root,
+      render: renderMock,
+      errorPage: errorPageMock,
+      onRouteChange: onRouteChangeMock,
+    };
+    return createRouter(props);
+  };
 
   beforeEach(() => {
     root = document.createElement('div');
     renderMock = jest.fn();
     errorPageMock = jest.fn();
     onRouteChangeMock = jest.fn();
+    routes = {
+      '/': jest.fn(() => 'HomePage'),
+      '/about': jest.fn(() => 'AboutPage'),
+    };
 
     document.body.appendChild(root);
   });
@@ -23,40 +39,14 @@ describe('createRouter 테스트', () => {
   });
 
   test('라우터를 생성하고 초기 경로를 렌더링합니다.', () => {
-    const routes = {
-      '/': jest.fn(() => 'HomePage'),
-      '/about': jest.fn(() => 'AboutPage'),
-    };
-
-    const props: CreateRouterProps<string> = {
-      routes,
-      root,
-      render: renderMock,
-      errorPage: errorPageMock,
-      onRouteChange: onRouteChangeMock,
-    };
-
-    createRouter(props);
+    initializeRouter();
 
     expect(routes['/']).toHaveBeenCalled();
     expect(renderMock).toHaveBeenCalledWith('HomePage');
   });
 
   test('push 메서드를 사용하여 경로를 변경하고 페이지를 렌더링합니다.', () => {
-    const routes = {
-      '/': jest.fn(() => 'HomePage'),
-      '/about': jest.fn(() => 'AboutPage'),
-    };
-
-    const props: CreateRouterProps<string> = {
-      routes,
-      root,
-      render: renderMock,
-      errorPage: errorPageMock,
-      onRouteChange: onRouteChangeMock,
-    };
-
-    const router: Router = createRouter(props);
+    const router: Router = initializeRouter();
     router.push('/about');
 
     expect(routes['/about']).toHaveBeenCalled();
@@ -64,20 +54,7 @@ describe('createRouter 테스트', () => {
   });
 
   test('replace 메서드를 사용하여 경로를 변경하고 페이지를 렌더링합니다.', () => {
-    const routes = {
-      '/': jest.fn(() => 'HomePage'),
-      '/about': jest.fn(() => 'AboutPage'),
-    };
-
-    const props: CreateRouterProps<string> = {
-      routes,
-      root,
-      render: renderMock,
-      errorPage: errorPageMock,
-      onRouteChange: onRouteChangeMock,
-    };
-
-    const router: Router = createRouter(props);
+    const router: Router = initializeRouter();
     router.replace('/about');
 
     expect(routes['/about']).toHaveBeenCalled();
@@ -85,20 +62,7 @@ describe('createRouter 테스트', () => {
   });
 
   test('back 메서드를 사용하여 히스토리에서 뒤로 이동합니다.', () => {
-    const routes = {
-      '/': jest.fn(() => 'HomePage'),
-      '/about': jest.fn(() => 'AboutPage'),
-    };
-
-    const props: CreateRouterProps<string> = {
-      routes,
-      root,
-      render: renderMock,
-      errorPage: errorPageMock,
-      onRouteChange: onRouteChangeMock,
-    };
-
-    const router: Router = createRouter(props);
+    const router: Router = initializeRouter();
     router.push('/about');
     router.back();
 
@@ -106,20 +70,7 @@ describe('createRouter 테스트', () => {
   });
 
   test('forward 메서드를 사용하여 히스토리에서 앞으로 이동합니다.', () => {
-    const routes = {
-      '/': jest.fn(() => 'HomePage'),
-      '/about': jest.fn(() => 'AboutPage'),
-    };
-
-    const props: CreateRouterProps<string> = {
-      routes,
-      root,
-      render: renderMock,
-      errorPage: errorPageMock,
-      onRouteChange: onRouteChangeMock,
-    };
-
-    const router: Router = createRouter(props);
+    const router: Router = initializeRouter();
     router.push('/about');
     router.back();
     router.forward();
@@ -128,20 +79,7 @@ describe('createRouter 테스트', () => {
   });
 
   test('go 메서드를 사용하여 히스토리에서 특정 위치로 이동합니다.', () => {
-    const routes = {
-      '/': jest.fn(() => 'HomePage'),
-      '/about': jest.fn(() => 'AboutPage'),
-    };
-
-    const props: CreateRouterProps<string> = {
-      routes,
-      root,
-      render: renderMock,
-      errorPage: errorPageMock,
-      onRouteChange: onRouteChangeMock,
-    };
-
-    const router: Router = createRouter(props);
+    const router: Router = initializeRouter();
     router.push('/about');
     router.go(-1);
 
@@ -149,20 +87,7 @@ describe('createRouter 테스트', () => {
   });
 
   test('없는 경로로 이동할 때 에러 페이지를 렌더링합니다.', () => {
-    const routes = {
-      '/': jest.fn(() => 'HomePage'),
-      '/about': jest.fn(() => 'AboutPage'),
-    };
-
-    const props: CreateRouterProps<string> = {
-      routes,
-      root,
-      render: renderMock,
-      errorPage: errorPageMock,
-      onRouteChange: onRouteChangeMock,
-    };
-
-    const router: Router = createRouter(props);
+    const router: Router = initializeRouter();
     router.push('/non-existent');
 
     expect(errorPageMock).toHaveBeenCalled();
