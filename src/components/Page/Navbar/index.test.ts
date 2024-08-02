@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import { render } from '../../../core/createComponent';
+import { mount } from '../../../core/createComponent';
 import Navbar from './index.ts';
 
 describe('Navbar 컴포넌트', () => {
@@ -7,7 +7,7 @@ describe('Navbar 컴포넌트', () => {
     // DOM에 컴포넌트를 추가합니다.
     document.body.innerHTML = '<div id="root"></div>';
     const root = document.getElementById('root') as HTMLElement;
-    render(Navbar(), root);
+    mount(Navbar(), root);
 
     // Assertions (검증)
     const navbarElement = root.querySelector('.navbar');

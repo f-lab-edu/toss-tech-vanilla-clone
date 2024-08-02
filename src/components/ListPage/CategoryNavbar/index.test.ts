@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import { render } from '../../../core/createComponent';
+import { mount } from '../../../core/createComponent';
 import CategoryNavbar, { CATEGORIES } from './index';
 
 describe('CategoryNavbar 컴포넌트', () => {
@@ -7,7 +7,7 @@ describe('CategoryNavbar 컴포넌트', () => {
     // DOM에 컴포넌트를 추가합니다.
     document.body.innerHTML = '<div id=root></div>';
     const root = document.getElementById('root') as HTMLElement;
-    render(CategoryNavbar(), root);
+    mount(CategoryNavbar(), root);
 
     // 카테고리 네비게이션 바가 올바르게 렌더링되었는지 확인합니다.
     const navbar = document.querySelector('.category-navbar');

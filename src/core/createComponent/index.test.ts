@@ -3,8 +3,7 @@ import '@testing-library/jest-dom';
 import {
   createComponent,
   createElement,
-  render,
-  reRender,
+  mount,
   unmount,
   setAttributes,
   setClassnames,
@@ -55,7 +54,7 @@ describe('createComponent 테스트', () => {
   test('컴포넌트 상태를 업데이트시 새로운 불변객체 VirtualDOM을 생성하고 화면을 업데이트합니다.', () => {
     const component: VComponent = initializeComponent();
     const root = setupDOM();
-    render(component, root);
+    mount(component, root);
 
     const button1 = document.getElementById('increment') as HTMLElement;
     expect(button1).toHaveTextContent('Count: 0');
@@ -68,11 +67,11 @@ describe('createComponent 테스트', () => {
   });
 });
 
-describe('render 테스트', () => {
+describe('mount 테스트', () => {
   test('컴포넌트를 특정 DOM 요소에 마운트합니다.', () => {
     const component: VComponent = initializeComponent();
     const root = setupDOM();
-    render(component, root);
+    mount(component, root);
 
     const button1 = document.getElementById('increment') as HTMLElement;
     expect(button1).toBeInTheDocument();
@@ -91,28 +90,6 @@ describe('unmount 테스트', () => {
     unmount(mountedDOM, root);
 
     expect(root.firstChild).toBeNull();
-  });
-});
-
-describe('reRender 테스트', () => {
-  test('상태 변경 후 컴포넌트를 다시 렌더링합니다.', () => {
-    const component: VComponent = initializeComponent();
-    const root = setupDOM();
-    render(component, root);
-
-    const button1 = document.getElementById('increment') as HTMLElement;
-    expect(button1).toHaveTextContent('Count: 0');
-
-    fireEvent.click(button1);
-    const button2 = document.getElementById('increment') as HTMLElement;
-    expect(button2).toHaveTextContent('Count: 1');
-
-    fireEvent.click(button2);
-    const button3 = document.getElementById('increment') as HTMLElement;
-    reRender();
-    expect(button1).not.toBe(button2);
-    expect(button2).not.toBe(button3);
-    expect(button3).toHaveTextContent('Count: 2');
   });
 });
 

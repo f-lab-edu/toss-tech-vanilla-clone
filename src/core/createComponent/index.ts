@@ -62,11 +62,11 @@ function buildCreateComponent() {
     componentDidMount,
   }: CreateComponentProps): VComponent {
     let state: State = initialState || {};
-
     const setState = (newState: State) => {
       if (state !== newState) {
         state = newState;
-        reRender();
+        const root = document.getElementById('root');
+        mount(appComponent, root as HTMLElement);
       }
     };
 
@@ -129,8 +129,11 @@ function buildCreateComponent() {
    * @param {VComponent} component - 렌더링할 컴포넌트
    * @param {HTMLElement} root - 루트 요소
    */
-  function render(component: VComponent, root: HTMLElement) {
+  function mount(component: VComponent, root: HTMLElement) {
     appComponent = component;
+    if (root?.firstElementChild) {
+      unmount(root?.firstElementChild as HTMLElement, root as HTMLElement);
+    }
     const dom = generateDOMFromVirtualDOM(component);
     root.appendChild(dom);
   }
@@ -144,21 +147,10 @@ function buildCreateComponent() {
     root.removeChild(dom);
   }
 
-  /**
-   * 현재 상태를 기반으로 컴포넌트를 다시 렌더링합니다.
-   * @returns {HTMLElement} 새로 렌더링된 DOM 요소
-   */
-  function reRender() {
-    const root = document.getElementById('root');
-    unmount(root?.firstElementChild as HTMLElement, root as HTMLElement);
-    render(appComponent, root as HTMLElement);
-  }
-
   return {
     createComponent,
     createElement,
-    render,
-    reRender,
+    mount,
     unmount,
     setAttributes,
     setClassnames,
@@ -170,8 +162,7 @@ function buildCreateComponent() {
 export const {
   createComponent,
   createElement,
-  render,
-  reRender,
+  mount,
   unmount,
   setAttributes,
   setClassnames,

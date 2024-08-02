@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 import { getByAltText } from '@testing-library/dom';
-import { render } from '../../core/createComponent';
+import { mount } from '../../core/createComponent';
 import ListPage from './index';
 
 describe('ListPage 컴포넌트', () => {
@@ -9,7 +9,7 @@ describe('ListPage 컴포넌트', () => {
     // DOM에 컴포넌트를 추가합니다.
     document.body.innerHTML = '<div id=root></div>';
     const root = document.getElementById('root') as HTMLElement;
-    render(ListPage({ path }), root);
+    mount(ListPage({ path }), root);
 
     // Hero 이미지가 올바르게 렌더링되었는지 확인합니다.
     const heroImg = getByAltText(document.body, 'toss tech hero image');

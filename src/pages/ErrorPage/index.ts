@@ -1,5 +1,5 @@
 import { createComponent, createElement } from '../../core/createComponent';
-import { router } from '../../init';
+import { getRouter } from '../../init';
 import Page from '../../components/Page';
 
 function ErrorPage() {
@@ -32,6 +32,7 @@ function ErrorPage() {
         event: {
           type: 'click' as keyof HTMLElementTagNameMap,
           listener: () => {
+            const router = getRouter();
             router.push('/');
           },
         },

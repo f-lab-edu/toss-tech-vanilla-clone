@@ -2,7 +2,7 @@ import '@testing-library/jest-dom';
 import {
   createComponent,
   createElement,
-  render,
+  mount,
 } from '../../core/createComponent';
 import Page from './index.ts';
 
@@ -41,7 +41,7 @@ describe('Page Component', () => {
     // DOM에 컴포넌트를 추가합니다.
     document.body.innerHTML = '<div id=root></div>';
     const root = document.getElementById('root') as HTMLElement;
-    render(Page(props), root);
+    mount(Page(props), root);
 
     // Assertions (검증)
     const pageElement = root.querySelector('.page.custom-class');
