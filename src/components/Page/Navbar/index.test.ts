@@ -1,41 +1,40 @@
 import '@testing-library/jest-dom';
-import { screen } from '@testing-library/dom';
-import Navbar from './index';
+import { mount } from '../../../core/createComponent';
+import Navbar from './index.ts';
 
-jest.mock('../../../init', () => ({
-  router: {
-    push: jest.fn(),
-  },
-}));
+describe('Navbar 컴포넌트', () => {
+  it('필요한 요소들을 올바르게 렌더링해야 합니다', () => {
+    // DOM에 컴포넌트를 추가합니다.
+    document.body.innerHTML = '<div id="root"></div>';
+    const root = document.getElementById('root') as HTMLElement;
+    mount(Navbar(), root);
 
-describe('Navbar', () => {
-  let navbar: HTMLElement;
+    // Assertions (검증)
+    const navbarElement = root.querySelector('.navbar');
+    expect(navbarElement).toBeInTheDocument();
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-    document.body.innerHTML = ''; // 테스트 간의 DOM 초기화
-    navbar = Navbar();
-    document.body.appendChild(navbar);
-  });
+    const linkElement = navbarElement!.querySelector('a');
+    expect(linkElement).toBeInTheDocument();
+    expect(linkElement).toHaveAttribute('href', '/');
+    expect(linkElement).toHaveAttribute(
+      'aria-label',
+      '토스 기술 블로그 클론, 토스 테크 클론',
+    );
 
-  it('로고 및 toss tech text 이미지가 포함 된 a tag를 노출한다.', () => {
-    expect(navbar).toBeInTheDocument();
-    expect(navbar).toHaveClass('navbar');
+    const navbarContentElement = linkElement!.querySelector('.navbar-content');
+    expect(navbarContentElement).toBeInTheDocument();
 
-    const link = screen.getByRole('link', {
-      name: /토스 기술 블로그 클론, 토스 테크 클론/i,
-    });
-    expect(link).toBeInTheDocument();
-    expect(link).toHaveAttribute('href', '/');
-
-    const logoImg = screen.getByAltText('toss logo image');
+    const logoImg = navbarContentElement!.querySelector('.logo');
     expect(logoImg).toBeInTheDocument();
-    expect(logoImg).toHaveClass('logo');
     expect(logoImg).toHaveAttribute('src', './src/assets/images/logo.png');
+    expect(logoImg).toHaveAttribute('alt', 'toss logo image');
 
-    const titleImg = screen.getByAltText('toss tech title image');
+    const titleImg = navbarContentElement!.querySelector('.title-img');
     expect(titleImg).toBeInTheDocument();
-    expect(titleImg).toHaveClass('title-img');
     expect(titleImg).toHaveAttribute('src', './src/assets/images/title.png');
+    expect(titleImg).toHaveAttribute('alt', 'toss tech title image');
+
+    // 클린업
+    root.remove();
   });
 });

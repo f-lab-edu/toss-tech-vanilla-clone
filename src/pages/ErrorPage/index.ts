@@ -1,44 +1,51 @@
-import { createComponent } from '../../core/createComponent';
-import { router } from '../../init';
+import { createComponent, createElement } from '../../core/createComponent';
+import { getRouter } from '../../init';
 import Page from '../../components/Page';
 
-function ErrorPage(): HTMLElement {
+function ErrorPage() {
   // h2 요소 생성
-  const heading = createComponent({
-    type: 'h2',
-    textContent: '앗, 페이지를 찾지 못했어요',
-  });
-
-  // 안내 메시지 div 생성
-  const message = createComponent({
-    type: 'div',
-    textContent: '페이지 주소가 정확한지 확인해주세요.',
-  });
-
-  // 버튼 생성
-  const button = createComponent({
-    type: 'button',
-    textContent: '홈으로 가기',
-    event: {
-      type: 'click' as keyof HTMLElementTagNameMap,
-      listener: () => {
-        router.push('/');
-      },
+  const Heading = createComponent({
+    render: () => {
+      return createElement({
+        type: 'h2',
+        children: ['앗, 페이지를 찾지 못했어요'],
+      });
     },
   });
 
-  const errorPage = Page({
-    classnames: ['error-page'],
-    children: [heading, message, button],
+  // 안내 메시지 div 생성
+  const Message = createComponent({
+    render: () => {
+      return createElement({
+        type: 'div',
+        children: ['페이지 주소가 정확한지 확인해주세요.'],
+      });
+    },
   });
 
-  // const errorPage = createComponent({
-  //   type: 'div',
-  //   classnames: ['page', 'error-page'],
-  //   children: [heading, message, button],
-  // });
+  // 버튼 생성
+  const Button = createComponent({
+    render: () => {
+      return createElement({
+        type: 'button',
+        children: ['홈으로 가기'],
+        event: {
+          type: 'click' as keyof HTMLElementTagNameMap,
+          listener: () => {
+            const router = getRouter();
+            router.push('/');
+          },
+        },
+      });
+    },
+  });
 
-  return errorPage;
+  const ErrorPage = Page({
+    classnames: ['error-page'],
+    children: [Heading, Message, Button],
+  });
+
+  return ErrorPage;
 }
 
 export default ErrorPage;

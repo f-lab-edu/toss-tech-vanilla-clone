@@ -1,25 +1,24 @@
-import { createComponent } from '../../core/createComponent';
+import { createComponent, createElement } from '../../core/createComponent';
 import Navbar from './Navbar/index.ts';
+import { Child } from '../../core/createComponent/types/createComponent.ts';
 
 interface Props {
   classnames: string[];
-  children: HTMLElement[];
+  children: Child[];
 }
 
 function Page({ classnames, children }: Props) {
-  const contentContainer = createComponent({
-    type: 'div',
-    classnames: ['content-container'],
-    children: [...children],
+  const pageComponent = createComponent({
+    render: () => {
+      return createElement({
+        type: 'div',
+        classnames: ['page', ...classnames],
+        children: [Navbar(), ...children],
+      });
+    },
   });
 
-  const page = createComponent({
-    type: 'div',
-    classnames: ['page', ...classnames],
-    children: [Navbar(), contentContainer],
-  });
-
-  return page;
+  return pageComponent;
 }
 
 export default Page;

@@ -1,33 +1,27 @@
 import '@testing-library/jest-dom';
-import { screen } from '@testing-library/dom';
+import { getByAltText } from '@testing-library/dom';
+import { mount } from '../../core/createComponent';
 import ListPage from './index';
 
-describe('ListPage', () => {
-  let listPage: HTMLElement;
-  beforeEach(() => {
-    jest.clearAllMocks();
-    document.body.innerHTML = '';
-    listPage = ListPage({ path: '/' });
-    document.body.appendChild(listPage);
-  });
+describe('ListPage 컴포넌트', () => {
+  test('경로가 주어졌을 때 올바르게 렌더링되는지 확인합니다.', () => {
+    const path = '/some-path';
+    // DOM에 컴포넌트를 추가합니다.
+    document.body.innerHTML = '<div id=root></div>';
+    const root = document.getElementById('root') as HTMLElement;
+    mount(ListPage({ path }), root);
 
-  it('리스트 페이지 내부 요소들을 노출한다.', () => {
-    expect(listPage).toBeInTheDocument();
-    expect(listPage).toHaveClass('list-page');
-
-    const heroImg = screen.getByAltText('toss tech hero image');
+    // Hero 이미지가 올바르게 렌더링되었는지 확인합니다.
+    const heroImg = getByAltText(document.body, 'toss tech hero image');
     expect(heroImg).toBeInTheDocument();
+    expect(heroImg).toHaveAttribute('src', '/src/assets/images/hero.webp');
 
-    const links = screen.getAllByRole('link');
-    expect(links).toHaveLength(4);
+    // CategoryNavbar가 올바르게 렌더링되었는지 확인합니다.
+    const categoryNavbar = document.querySelector('.category-navbar');
+    expect(categoryNavbar).toBeInTheDocument();
 
-    const categoryNavbarTabs = links.filter((link) =>
-      link.getAttribute('class')?.includes('tab'),
-    );
-    categoryNavbarTabs.forEach((tab) => {
-      expect(tab).toBeInTheDocument();
-    });
-
-    // TODO: article list 요소
+    // ListPage가 올바르게 렌더링되었는지 확인합니다.
+    const listPage = document.querySelector('.list-page');
+    expect(listPage).toBeInTheDocument();
   });
 });
