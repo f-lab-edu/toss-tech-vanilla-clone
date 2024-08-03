@@ -2,6 +2,49 @@ import { Router } from './types/router';
 import { CreateRouterProps } from './types/router';
 
 /**
+ * 경로를 '/'로 분할하여 세그먼트 배열을 반환합니다.
+ * @param {string} path - 경로
+ * @returns {string[]} 경로 세그먼트 배열
+ */
+function splitPath(path: string): string[] {
+  return path.split('/').filter(Boolean);
+}
+
+/**
+ * 경로와 경로 맵을 매칭하고 파라미터를 추출합니다.
+ * @param {string} path - 경로
+ * @param {Record<string, Function>} routes - 경로 맵
+ * @returns {{ component: Function, params: Record<string, string> }} 컴포넌트와 파라미터
+ */
+function matchRoute(path: string, routes: Record<string, Function>) {
+  const pathSegments = splitPath(path);
+
+  for (const route in routes) {
+    const routeSegments = splitPath(route);
+    if (routeSegments.length !== pathSegments.length) continue;
+
+    const params: Record<string, string> = {};
+    let isMatch = true;
+
+    for (let i = 0; i < routeSegments.length; i++) {
+      if (routeSegments[i].startsWith('[') && routeSegments[i].endsWith(']')) {
+        const paramName = routeSegments[i].slice(1, -1);
+        params[paramName] = pathSegments[i];
+      } else if (routeSegments[i] !== pathSegments[i]) {
+        isMatch = false;
+        break;
+      }
+    }
+
+    if (isMatch) {
+      return { component: routes[route], params };
+    }
+  }
+
+  return { component: null, params: {} };
+}
+
+/**
  * 라우터를 생성합니다.
  * @param {CreateRouterProps} props - 라우터 생성에 필요한 속성
  * @returns {Router} - 라우터 인터페이스를 반환합니다.
@@ -22,7 +65,16 @@ export function createRouter<T>({
    */
   function route(path: string) {
     onRouteChange({ currentElement: root?.firstElementChild as HTMLElement });
-    const page: T = (routeMap[path] || errorPage)();
+
+    const { component, params } = matchRoute(path, routeMap);
+
+    let page: T;
+    if (component) {
+      page = component(params);
+    } else {
+      page = errorPage();
+    }
+
     render(page);
     bindEventListener(root);
   }
