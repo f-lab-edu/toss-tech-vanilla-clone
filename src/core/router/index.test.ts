@@ -28,6 +28,9 @@ describe('createRouter 테스트', () => {
     routes = {
       '/': jest.fn(() => 'HomePage'),
       '/about': jest.fn(() => 'AboutPage'),
+      '/articles/[articleId]': jest.fn(
+        ({ articleId }) => `ArticlePage ${articleId}`,
+      ),
     };
 
     document.body.appendChild(root);
@@ -92,5 +95,15 @@ describe('createRouter 테스트', () => {
 
     expect(errorPageMock).toHaveBeenCalled();
     expect(renderMock).toHaveBeenCalledWith(undefined);
+  });
+
+  test('동적 경로로 이동할 때 경로 파라미터를 추출하고 페이지를 렌더링합니다.', () => {
+    const router: Router = initializeRouter();
+    router.push('/articles/123');
+
+    expect(routes['/articles/[articleId]']).toHaveBeenCalledWith({
+      articleId: '123',
+    });
+    expect(renderMock).toHaveBeenCalledWith('ArticlePage 123');
   });
 });
