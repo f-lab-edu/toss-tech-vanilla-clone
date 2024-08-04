@@ -62,11 +62,18 @@ function buildCreateComponent() {
     componentDidMount,
   }: CreateComponentProps): VComponent {
     let state: State = initialState || {};
-    const setState = (newState: State) => {
-      if (state !== newState) {
-        state = newState;
+    let isComponentMounted = false; // 컴포넌트가 처음 마운트되었는지를 추적하는 플래그
+
+    const setState = (newState: Partial<State>) => {
+      const updatedState = { ...state, ...newState };
+
+      // 상태가 실제로 변경된 경우에만 업데이트
+      if (JSON.stringify(state) !== JSON.stringify(updatedState)) {
+        state = updatedState;
         const root = document.getElementById('root');
-        mount(appComponent, root as HTMLElement);
+        if (root) {
+          mount(appComponent, root);
+        }
       }
     };
 
@@ -76,7 +83,12 @@ function buildCreateComponent() {
     };
 
     if (componentDidMount) {
-      component.componentDidMount = () => componentDidMount(setState);
+      component.componentDidMount = () => {
+        if (!isComponentMounted) {
+          componentDidMount(state, setState);
+          isComponentMounted = true;
+        }
+      };
     }
 
     return component;
@@ -124,6 +136,22 @@ function buildCreateComponent() {
     }
   }
 
+  // function executeComponentDidMount(component: VComponent | null) {
+  //   if (!component) {
+  //     return;
+  //   }
+  //   if (component.componentDidMount && !component.componentDidMountCalled) {
+  //     component!.componentDidMount();
+  //     component.componentDidMountCalled = true; // 무한 반복을 방지하기 위한 플래그 설정
+  //   }
+  //   const { children } = component.render();
+  //   if (children) {
+  //     children.forEach((comp) => {
+  //       if (typeof comp !== 'string') executeComponentDidMount(comp);
+  //     });
+  //   }
+  // }
+
   /**
    * VirtualDOM을 순회하여 실제 DOM으로 변환하고, 특정 루트 요소에 삽입합니다.
    * @param {VComponent} component - 렌더링할 컴포넌트
@@ -131,11 +159,18 @@ function buildCreateComponent() {
    */
   function mount(component: VComponent, root: HTMLElement) {
     appComponent = component;
-    if (root?.firstElementChild) {
-      unmount(root?.firstElementChild as HTMLElement, root as HTMLElement);
+    if (root.firstElementChild) {
+      unmount(root.firstElementChild as HTMLElement, root);
     }
     const dom = generateDOMFromVirtualDOM(component);
     root.appendChild(dom);
+    // executeComponentDidMount(component);
+    // componentDidMount가 정의되어 있다면 호출합니다.
+    if (component.componentDidMount && !component.componentDidMountCalled) {
+      component.componentDidMount();
+
+      component.componentDidMountCalled = true; // 무한 반복을 방지하기 위한 플래그 설정
+    }
   }
 
   /**
