@@ -8,7 +8,7 @@ function Navbar(): VComponent {
       return createElement({
         type: 'img',
         attributes: {
-          src: './src/assets/images/logo.png',
+          src: '/src/assets/images/logo.png',
           alt: 'toss logo image',
         },
         classnames: ['logo'],
@@ -22,7 +22,7 @@ function Navbar(): VComponent {
       return createElement({
         type: 'img',
         attributes: {
-          src: './src/assets/images/title.png',
+          src: '/src/assets/images/title.png',
           alt: 'toss tech title image',
         },
         classnames: ['title-img'],

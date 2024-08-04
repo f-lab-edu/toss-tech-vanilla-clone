@@ -1,5 +1,6 @@
 import { createRouter } from './core/router';
 import ListPage from './pages/ListPage';
+import DetailPage from './pages/DetailPage';
 import ErrorPage from './pages/ErrorPage';
 import { Router } from './core/router/types/router';
 import { mount, unmount } from './core/createComponent/index';
@@ -24,6 +25,7 @@ export function init(root: HTMLElement) {
         '/': () => ListPage({ path: '/' }),
         '/tech': () => ListPage({ path: '/tech' }),
         '/design': () => ListPage({ path: '/design' }),
+        '/articles/[articleId]': (articleId) => DetailPage({ articleId }),
         // TODO: '/articles:articleId': detailPage(articleId)}
       },
       root,

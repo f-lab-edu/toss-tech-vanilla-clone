@@ -3,7 +3,3 @@
   height: calc(100% - 60px); /* Adjust based on the height of your navbar */
   overflow-y: auto;
 }
-
-.content-container {
-  padding: 0 24px;
-}
