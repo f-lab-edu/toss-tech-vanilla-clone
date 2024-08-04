@@ -4,9 +4,9 @@ import { init } from './init.ts';
  *  init을 통해 router와 같은 초기 설정을 합니다.
  * @function
  */
-export const render = () => {
+export const render = async () => {
   const $root = document.getElementById('root') as HTMLElement;
-  init($root);
+  await init($root);
 };
 
 render();

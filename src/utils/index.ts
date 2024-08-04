@@ -1,6 +1,6 @@
 import allList from '../assets/data/all-articles.json';
-import techList from '../assets/data/all-articles.json';
-import designList from '../assets/data/all-articles.json';
+import techList from '../assets/data/tech-articles.json';
+import designList from '../assets/data/design-articles.json';
 import { Article } from '../types/index';
 
 /**
@@ -20,7 +20,7 @@ async function delay(ms: number): Promise<void> {
 }
 
 async function fetchList(path: string): Promise<Article[]> {
-  await delay(1000);
+  await delay(200);
   return dataMap[path];
 }
 

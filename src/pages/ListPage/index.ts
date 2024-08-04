@@ -2,14 +2,13 @@ import { createComponent, createElement } from '../../core/createComponent';
 import Page from '../../components/Page';
 import CategoryNavbar from '../../components/ListPage/CategoryNavbar';
 import List from '../../components/ListPage/List';
-import { fetchList } from '../../utils/index';
-import data from '../../assets/data/all-articles.json';
-
+import { Article } from '../../types/index';
 interface Props {
   path: string;
+  list: Article[];
 }
 
-function ListPage({ path }: Props) {
+function ListPage({ path, list }: Props) {
   console.log('ListPage path:', path);
   const HeroImg = createComponent({
     render: () => {
@@ -25,7 +24,7 @@ function ListPage({ path }: Props) {
   });
   const ListPageContent = createComponent({
     render: () => {
-      // const data = await fetchList('/');
+      console.log('list: ', list);
       return createElement({
         type: 'div',
         classnames: ['list-page-content'],
@@ -33,25 +32,12 @@ function ListPage({ path }: Props) {
           HeroImg,
           CategoryNavbar(),
           createComponent({
-            initialState: { list: data },
+            initialState: { list },
             render: (state) => {
               return createElement({
                 type: 'div',
                 children: [List(state.list)],
               });
-            },
-            componentDidMount: async (state, setState) => {
-              console.log('hklhjdkfjd');
-              // fetch TODO
-              // 상태가 초기 상태인지 확인
-              if (state.list.length === 0) {
-                // fetch TODO
-                const list = fetchList('/').then((res) => {
-                  console.log('res', res);
-                });
-                console.log('list: ', list);
-                setState({ list });
-              }
             },
           }),
         ],

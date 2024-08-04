@@ -1,16 +1,16 @@
 import { createComponent, createElement } from '../../core/createComponent';
 import Page from '../../components/Page';
-// import Tag from '../../components/DetailPage/Tag/index';
 import { formatDate } from '../../utils/index';
 import { Article } from '../../types/index';
-import data from '../../assets/data/all-articles.json';
 
 interface Props {
   articleId: string;
+  article: Article;
 }
 
-function DetailPage({ articleId }: Props) {
+function DetailPage({ articleId, article }: Props) {
   console.log('articleId: ', articleId);
+  console.log('article: ', article);
   const {
     title,
     publishedTime,
@@ -19,7 +19,7 @@ function DetailPage({ articleId }: Props) {
     editor,
     fullDescription,
     seoConfig,
-  }: Article = data[0];
+  }: Article = article;
   const HeroImg = createComponent({
     render: () => {
       return createElement({
