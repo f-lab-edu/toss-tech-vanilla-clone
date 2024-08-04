@@ -27,11 +27,11 @@ function ListItem(item: Article) {
     },
   });
 
-  const Meta = createComponent({
+  const Author = createComponent({
     render: () => {
       return createElement({
         type: 'div',
-        classnames: ['subtitle'],
+        classnames: ['author'],
         children: [`${formatDate(publishedTime)}·${name}`],
       });
     },
@@ -42,7 +42,7 @@ function ListItem(item: Article) {
       return createElement({
         type: 'div',
         classnames: ['text-contents'],
-        children: [Title, Subtitle, Meta],
+        children: [Title, Subtitle, Author],
       });
     },
   });

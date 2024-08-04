@@ -24,7 +24,6 @@ function ListPage({ path, list }: Props) {
   });
   const ListPageContent = createComponent({
     render: () => {
-      console.log('list: ', list);
       return createElement({
         type: 'div',
         classnames: ['list-page-content'],
