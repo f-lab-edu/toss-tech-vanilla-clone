@@ -10,7 +10,7 @@ function List(list: Article[]) {
         return createElement({
           type: 'a',
           attributes: {
-            href: `articles/${item.key}`,
+            href: `/articles/${item.key}`,
           },
           children: [ListItem(item)],
         });
