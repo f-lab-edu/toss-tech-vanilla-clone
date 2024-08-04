@@ -12,7 +12,7 @@
     "lint:fix": "pnpm eslint . --fix",
     "build:clean": "rm -rf ./dist",
     "build": "tsc && vite build",
-    "build:router": "tsup src/core/router/index.ts --format cjs,esm --dts --minify"
+    "build:modules": "tsup --format cjs,esm --dts --minify"
   },
   "keywords": [],
   "author": "",
