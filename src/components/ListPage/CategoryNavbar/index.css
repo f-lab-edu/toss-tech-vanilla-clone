@@ -4,7 +4,7 @@
   display: flex;
   border-bottom: 1px solid #f2f4f6;
   border-bottom-color: #f2f4f6;
-  padding: 10px 0 0 0;
+  padding: 10px 0;
   position: sticky;
   top: 60px;
   z-index: 9999;

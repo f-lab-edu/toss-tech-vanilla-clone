@@ -11,7 +11,7 @@ function ListItem(item: Article) {
     render: () => {
       return createElement({
         type: 'div',
-        classnames: ['title'],
+        classnames: ['list-item-title'],
         children: [title],
       });
     },
@@ -21,7 +21,7 @@ function ListItem(item: Article) {
     render: () => {
       return createElement({
         type: 'div',
-        classnames: ['subtitle'],
+        classnames: ['list-item-subtitle'],
         children: [subtitle],
       });
     },
@@ -31,7 +31,7 @@ function ListItem(item: Article) {
     render: () => {
       return createElement({
         type: 'div',
-        classnames: ['author'],
+        classnames: ['list-item-author'],
         children: [`${formatDate(publishedTime)}·${name}`],
       });
     },
@@ -41,7 +41,7 @@ function ListItem(item: Article) {
     render: () => {
       return createElement({
         type: 'div',
-        classnames: ['text-contents'],
+        classnames: ['list-item-text-contents'],
         children: [Title, Subtitle, Author],
       });
     },
@@ -51,13 +51,13 @@ function ListItem(item: Article) {
     render: () => {
       return createElement({
         type: 'div',
-        classnames: ['img-container'],
+        classnames: ['list-item-img-container'],
         children: [
           createComponent({
             render: () => {
               return createElement({
                 type: 'img',
-                classnames: ['thumbnail-img'],
+                classnames: ['list-item-thumbnail-img'],
                 attributes: {
                   alt: 'thumbnail image',
                   src: imageUrl,
