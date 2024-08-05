@@ -5,8 +5,7 @@ import ErrorPage from './pages/ErrorPage';
 import { Router } from './core/router/types/router';
 import { mount, unmount } from './core/createComponent/index';
 import { VComponent } from './core/createComponent/types/createComponent';
-import { fetchList } from './utils/index';
-import { Article } from './types';
+import { fetchList } from './requests/index';
 
 /** @type {Router} */
 let router: Router;
@@ -26,10 +25,6 @@ export async function init(root: HTMLElement) {
     fetchList('/design'),
   ]);
 
-  function getArticle(articleId: string): Article {
-    return allArticles.find(({ key }) => key === articleId) as Article;
-  }
-
   function setRouter(root: HTMLElement) {
     // 초기 라우터 설정
     router = createRouter<VComponent>({
@@ -37,8 +32,10 @@ export async function init(root: HTMLElement) {
         '/': () => ListPage({ path: '/', list: allArticles }),
         '/tech': () => ListPage({ path: '/tech', list: techArticles }),
         '/design': () => ListPage({ path: '/design', list: designArticles }),
-        '/articles/[articleId]': ({ articleId }) =>
-          DetailPage({ articleId, article: getArticle(articleId) }),
+        '/articles/[articleId]': ({ articleId }) => {
+          const article = allArticles.find(({ key }) => key === articleId);
+          return article ? DetailPage({ articleId, article }) : ErrorPage();
+        },
       },
       root,
       render: (component) => mount(component, root),
