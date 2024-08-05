@@ -15,7 +15,7 @@ interface CreateRouterProps<T> {
    * 경로와 해당 컴포넌트를 매핑하는 객체입니다.
    * @type {{ [key: string]: () => T }}
    */
-  routes: { [key: string]: () => T };
+  routes: { [key: string]: (props?: any) => T };
 
   /**
    * 라우터가 작동할 루트 엘리먼트입니다.

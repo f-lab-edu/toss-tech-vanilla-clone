@@ -1,12 +1,14 @@
 import { createComponent, createElement } from '../../core/createComponent';
 import Page from '../../components/Page';
 import CategoryNavbar from '../../components/ListPage/CategoryNavbar';
-
+import List from '../../components/ListPage/List';
+import { Article } from '../../types/index';
 interface Props {
   path: string;
+  list: Article[];
 }
 
-function ListPage({ path }: Props) {
+function ListPage({ path, list }: Props) {
   console.log('ListPage path:', path);
   const HeroImg = createComponent({
     render: () => {
@@ -20,10 +22,31 @@ function ListPage({ path }: Props) {
       });
     },
   });
+  const ListPageContent = createComponent({
+    render: () => {
+      return createElement({
+        type: 'div',
+        classnames: ['list-page-content'],
+        children: [
+          HeroImg,
+          CategoryNavbar(),
+          createComponent({
+            initialState: { list },
+            render: (state) => {
+              return createElement({
+                type: 'div',
+                children: [List(state.list)],
+              });
+            },
+          }),
+        ],
+      });
+    },
+  });
 
   const ListPage = Page({
     classnames: ['list-page'],
-    children: [HeroImg, CategoryNavbar()],
+    children: [ListPageContent],
   });
 
   return ListPage;

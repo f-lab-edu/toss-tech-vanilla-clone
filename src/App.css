@@ -1,9 +1,30 @@
 @import url('components/Page/index.css');
 @import url('components/Page/Navbar/index.css');
 @import url('pages/ListPage/index.css');
+@import url('pages/DetailPage/index.css');
+@import url('pages/ErrorPage/index.css');
 @import url('components/ListPage/CategoryNavbar/index.css');
 @import url('components/ListPage/CategoryNavbarTab/index.css');
+@import url('components/ListPage/List/index.css');
+@import url('components/ListPage/ListItem/index.css');
 
 body {
   margin: 0;
+  font-family:
+    Toss Product Sans,
+    Tossface,
+    -apple-system,
+    BlinkMacSystemFont,
+    Bazier Square,
+    Noto Sans KR,
+    Segoe UI,
+    Apple SD Gothic Neo,
+    Roboto,
+    Helvetica Neue,
+    Arial,
+    sans-serif,
+    Apple Color Emoji,
+    Segoe UI Emoji,
+    Segoe UI Symbol,
+    Noto Color Emoji;
 }

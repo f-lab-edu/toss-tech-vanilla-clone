@@ -100,7 +100,7 @@ interface VElement {
  * @interface CreateComponentProps
  * @property {State} [initialState] - 초기 상태
  * @property {(state: State, setState: SetState) => VElement} render - 렌더링 함수
- * @property {(setState: SetState) => void} [componentDidMount] - 컴포넌트가 마운트될 때 호출되는 함수
+ * @property {(state: State, setState: SetState) => void} [componentDidMount] - 컴포넌트가 마운트될 때 호출되는 함수
  */
 interface CreateComponentProps {
   /**
@@ -123,7 +123,7 @@ interface CreateComponentProps {
    * @param {SetState} setState - 상태 설정 함수
    * @optional
    */
-  componentDidMount?: (setState: SetState) => void;
+  componentDidMount?: (state: State, setState: SetState) => void;
 }
 
 /**
@@ -131,7 +131,7 @@ interface CreateComponentProps {
  * @interface VComponent
  * @property {State} [state] - 컴포넌트 상태
  * @property {() => VElement} render - VElement를 반환하는 렌더링 함수
- * @property {(setState: SetState) => void} [componentDidMount] - 컴포넌트가 마운트될 때 호출되는 함수
+ * @property {(state: State, setState: SetState) => void} [componentDidMount] - 컴포넌트가 마운트될 때 호출되는 함수
  */
 interface VComponent {
   /**
@@ -152,7 +152,8 @@ interface VComponent {
    * @param {SetState} setState - 상태 설정 함수
    * @optional
    */
-  componentDidMount?: (setState: SetState) => void;
+  componentDidMount?: () => void;
+  componentDidMountCalled?: boolean;
 }
 
 /**
@@ -161,7 +162,7 @@ interface VComponent {
  * @extends VElement
  * @property {State} [initialState] - 초기 상태
  * @property {(state?: State, setState: SetState) => VElement} [render] - 렌더링 함수
- * @property {(setState: SetState) => void} [componentDidMount] - 컴포넌트가 마운트될 때 호출되는 함수
+ * @property {(state: State, setState: SetState) => void} [componentDidMount] - 컴포넌트가 마운트될 때 호출되는 함수
  */
 interface CreateElementProps extends VElement {
   /**
@@ -185,7 +186,7 @@ interface CreateElementProps extends VElement {
    * @param {SetState} setState - 상태 설정 함수
    * @optional
    */
-  componentDidMount?: (setState: SetState) => void;
+  componentDidMount?: (state: State, setState: SetState) => void;
 }
 
 /**

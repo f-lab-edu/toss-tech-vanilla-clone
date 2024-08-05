@@ -1,3 +1,11 @@
+.list-page-content {
+  padding: 0 24px;
+}
+
+.hero-img-container {
+  max-height: 240px;
+}
+
 .hero-img {
   display: flex;
   justify-content: center;
@@ -6,6 +14,4 @@
   margin: 24px auto 40px;
   width: 100%;
   max-width: 1050px;
-  min-height: 100%;
-  max-height: 100%;
 }

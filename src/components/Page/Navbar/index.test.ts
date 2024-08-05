@@ -26,12 +26,12 @@ describe('Navbar 컴포넌트', () => {
 
     const logoImg = navbarContentElement!.querySelector('.logo');
     expect(logoImg).toBeInTheDocument();
-    expect(logoImg).toHaveAttribute('src', './src/assets/images/logo.png');
+    expect(logoImg).toHaveAttribute('src', '/src/assets/images/logo.png');
     expect(logoImg).toHaveAttribute('alt', 'toss logo image');
 
     const titleImg = navbarContentElement!.querySelector('.title-img');
     expect(titleImg).toBeInTheDocument();
-    expect(titleImg).toHaveAttribute('src', './src/assets/images/title.png');
+    expect(titleImg).toHaveAttribute('src', '/src/assets/images/title.png');
     expect(titleImg).toHaveAttribute('alt', 'toss tech title image');
 
     // 클린업

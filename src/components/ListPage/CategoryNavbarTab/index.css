@@ -1,10 +1,14 @@
 .tab {
   text-decoration: none;
-  color: inherit;
   outline: 0;
-  padding: 10px 20px;
+  height: 40px;
+  line-height: 40px;
+  padding: 0 20px;
+  color: #6b7684;
 }
 
 .active {
-  color: red;
+  border-bottom: 2px solid #191f28;
+  font-weight: bold;
+  color: #333d4b;
 }
