@@ -19,8 +19,8 @@ Toss Tech blog SPA clone developed with VanillaJS, custom renderer, and routing 
 
 ## 구현 상세 내용
 
-- [커스텀 렌더러 모듈](src/core/createComponent/README.md): `src/core/createComponent`
-- [커스텀 라우터 모듈](src/core/router/README.md): `src/core/router`
+- [커스텀 렌더러 모듈](./src/core/createComponent/README.md): `src/core/createComponent`
+- [커스텀 라우터 모듈](./src/core/router/README.md): `src/core/router`
 - Dual Package Support(CJS, ESM): `dist`
 
 ## Router 모듈

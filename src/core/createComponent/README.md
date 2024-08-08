@@ -55,15 +55,19 @@ const MyComponent = createComponent({
       type: 'div',
       children: [
         `Count: ${state.count}`,
-        createElement({
-          type: 'button',
-          attributes: { id: 'increment' },
-          children: ['Increment'],
-          event: {
-            type: 'click',
-            listener: () => setState({ count: state.count + 1 }),
-          },
-        }),
+        createComponent({
+          render: () => {
+            return createElement({
+                type: 'button',
+                attributes: { id: 'increment' },
+                children: ['Increment'],
+                event: {
+                  type: 'click',
+                  listener: () => setState({ count: state.count + 1 }),
+                },
+              }),
+          }
+        })
       ],
     });
   },
