@@ -1,6 +1,6 @@
 # toss-tech-vanilla-clone
 
-토스 테크 SPA를 frontend framework 또는 library 없이 VanillaJS로 구현. 라우터 모듈과 렌더러 모듈 별도 구현
+[토스 테크 SPA](https://toss.tech/)를 frontend framework 또는 library 없이 VanillaJS로 구현. 라우터 모듈과 렌더러 모듈 별도 구현
 
 Toss Tech blog SPA clone developed with VanillaJS, custom renderer, and routing modules.
 
@@ -25,7 +25,7 @@ Toss Tech blog SPA clone developed with VanillaJS, custom renderer, and routing 
 
 ## Router 모듈
 
-`Router` 모듈은 클라이언트 사이드에서 경로 관리를 위한 기능을 제공합니다. 이 모듈을 통해 경로를 매칭하고, 컴포넌트를 렌더링하며, 브라우저 히스토리를 관리할 수 있습니다.
+`Router` 모듈은 클라이언트 사이드에서 경로 관리를 위한 기능을 제공합니다. 이 모듈을 통해 경로를 매칭하고, 컴포넌트를 렌더링하며, 브라우저 히스토리를 관리할 수 있습니다. 제네릭하게 디자인되어 다양한 프로젝트에서 재사용이 가능합니다.
 
 ### 주요 기능
 
@@ -142,15 +142,19 @@ const MyComponent = createComponent({
       type: 'div',
       children: [
         `Count: ${state.count}`,
-        createElement({
-          type: 'button',
-          attributes: { id: 'increment' },
-          children: ['Increment'],
-          event: {
-            type: 'click',
-            listener: () => setState({ count: state.count + 1 }),
-          },
-        }),
+        createComponent({
+          render: () => {
+            return createElement({
+                type: 'button',
+                attributes: { id: 'increment' },
+                children: ['Increment'],
+                event: {
+                  type: 'click',
+                  listener: () => setState({ count: state.count + 1 }),
+                },
+              }),
+          }
+        })
       ],
     });
   },
